@@ -1,4 +1,4 @@
-import React ,{useState} from 'react'
+import React, { useState } from 'react'
 import { auth, db } from "../firebase-config";
 import {
   createUserWithEmailAndPassword,
@@ -11,16 +11,16 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 
 
-function Login() {
-    const navigate = useNavigate();
+function Login({ setLoginModal }) {
+  const navigate = useNavigate();
 
-const [logging, setLogging] = useState(false)
-const [loginError, setLoginError] = useState('')
-const [email, setEmail] = useState('')
-const [password, setPassword] = useState('')
+  const [logging, setLogging] = useState(false)
+  const [loginError, setLoginError] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
 
-const login = async () => {
+  const login = async () => {
     try {
       setLogging(true);
       const user = await signInWithEmailAndPassword(
@@ -43,16 +43,17 @@ const login = async () => {
       }
     }
   };
-  
+
 
   return (
-    <div>
-        
-        <TextField  variant="outlined" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <TextField  variant="outlined"  type="password" label="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+    <div className='joinform' style={{height:'50vh'}}>
+
+      <TextField variant="outlined" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+      <TextField variant="outlined" type="password" label="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
 
-        <Button variant="contained" color="success" onClick={login} >Login</Button>
+      <Button variant="contained" color="success" onClick={login} >Login</Button>
+      <Button variant="outlined" style={{ fontSize: '10px', color: 'black', border: 'none', marginTop: '20px' }} onClick={() => { setLoginModal(false) }} >Close</Button>
 
 
     </div>

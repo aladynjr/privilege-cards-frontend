@@ -89,7 +89,7 @@ function HomeScreen() {
 
   return (
     <div>
-      <h1 style={{opacity:'0.8', marginTop:'120px', marginBottom:'35px'}} >Digital Discount Card</h1>
+      <h1 style={{opacity:'0.8', marginBottom:'35px'}} >Digital Discount Card</h1>
 
       <HomepageCard UpdateMainPrivilegeCard={UpdateMainPrivilegeCard} userID={userData?.app_user_id} cardAvailable={userData?.app_user_main_privilege_card} />
   

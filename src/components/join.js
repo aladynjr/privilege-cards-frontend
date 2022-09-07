@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 
 
-function Join() {
+function Join({setJoinModal}) {
     const navigate = useNavigate();
 
 const [logging, setLogging] = useState(false)
@@ -70,7 +70,7 @@ const AddBussiness = async (app_user_name,app_user_email, app_user_uid) => {
       };
 
   return (
-    <div>
+    <div  className='joinform'>
         <TextField  variant="outlined" label="Name" value={newName} onChange={(e) => setNewName(e.target.value)} />
 
         <TextField  variant="outlined" label="Email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} />
@@ -78,6 +78,7 @@ const AddBussiness = async (app_user_name,app_user_email, app_user_uid) => {
 
         <Button variant="contained" color="success" onClick={register} >Create Account</Button>
 
+        <Button variant="outlined" style={{fontSize:'10px', color:'black', border:'none', marginTop:'20px'}}  onClick={()=>{setJoinModal(false)}} >Close</Button>
 
     </div>
   )

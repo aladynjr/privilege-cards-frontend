@@ -29,7 +29,7 @@ function Navbar(props) {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-      Larnaca City Logo <GiPalmTree style={{fontSize:'30px', marginBottom:'-7px'}} />
+      Larnaca City  <GiPalmTree style={{fontSize:'30px', marginBottom:'-7px'}} />
       </Typography>
       <Divider />
       <List>
@@ -49,7 +49,7 @@ function Navbar(props) {
   return (
     <div >
     <Box sx={{ display: 'flex' }} >
-      <AppBar component="nav"  style={{background:'#0c3064'}} sx={{ height: '70px' }}  >
+      <AppBar component="nav"  style={{background:'#0c3064'}}  >
         <Toolbar >
           {/* <IconButton
             color="inherit"

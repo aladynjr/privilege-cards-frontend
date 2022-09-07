@@ -41,6 +41,13 @@ useEffect(()=>{
         document.body.style.overflow = 'hidden';
     }
 },[])
+
+useEffect(() => {
+  return () => {
+    document.body.style.overflow = 'unset';
+
+  }
+}, [])
   return (
     <div>
         
