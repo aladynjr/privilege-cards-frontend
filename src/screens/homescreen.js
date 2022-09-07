@@ -11,6 +11,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import { MdOutlineExpandMore } from 'react-icons/md';
 import { MdFavorite } from 'react-icons/md';
+import HomepageCard from '../components/homepagecard';
 
 
 function HomeScreen() {
@@ -87,11 +88,11 @@ function HomeScreen() {
 
 
   return (
-    <div>HomeScreen
-      <p>{userData?.app_user_name}</p>
-      <p>{userData?.app_user_email}</p>
-      {userData?.app_user_main_privilege_card ? <p>PRIVILEGE CARD AVAILABLE</p> : <p>NO PRIVILEGE CARD</p>}
-      <Button variant="contained" color="success" onClick={() => { UpdateMainPrivilegeCard(userData?.app_user_id, true) }} >GET CARD !</Button>
+    <div>
+      <h1 style={{opacity:'0.8', marginTop:'120px', marginBottom:'35px'}} >Digital Discount Card</h1>
+
+      <HomepageCard UpdateMainPrivilegeCard={UpdateMainPrivilegeCard} userID={userData?.app_user_id} cardAvailable={userData?.app_user_main_privilege_card} />
+  
       {favouriteBussinesses?.length > 0 && <Accordion style={{marginBlock:'20px'}}>
         <AccordionSummary
           expandIcon={<MdOutlineExpandMore style={{fontSize:'25px'}} />}

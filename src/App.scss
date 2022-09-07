@@ -549,13 +549,24 @@ footer a {
 @import url("https://fonts.googleapis.com/css2?family=Staatliches&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap");
 
+
+@media (max-width: 1010px) {
+  .bussinessprivilegecard {
+    transform: rotate(90deg);
+
+  }
+}
+
+// * {
+//   outline: 1px solid #f00 !important;
+//  }
+
 .bussinessprivilegecard {
 
-  background: url('./assets/imgs/wavebg.svg');
   height: 100vh;
-  width: 100vw;
-
+  background-repeat: no-repeat;
   display: grid;
+  object-fit: fill;
   //font-family: "Staatliches", cursive;
 
   color: black;
@@ -567,13 +578,70 @@ footer a {
     margin: auto;
     display: flex;
     //background: white;
-    background: url('./assets/imgs/wavebg.svg');
-    color: white;
+   // background: url('./assets/imgs/wavebg.svg');
+   background: white;
+    color: black;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
-    transform: scale(0.75);
+    //transform: scale(0.75);
     perspective-origin: center;
 
   }
+
+  @media (min-width: 200px) and (max-width: 321px){
+    .ticket {
+      transform: scale(0.57);
+    }
+  }
+
+
+  
+  @media (min-width: 323px) and (max-width: 380px){
+    .ticket {
+      transform: scale(0.72);
+    }
+  }
+
+
+@media (min-width: 380px) and (max-width: 450px){
+  .ticket {
+    transform: scale(0.85);
+  }
+}
+
+@media (min-width: 451px) and (max-width: 500px){
+  .ticket {
+    transform: scale(0.80);
+  }
+}
+
+@media (min-width: 501px) and (max-width: 600px){
+  .ticket {
+    transform: scale(0.80);
+  }
+}
+
+@media (min-width: 601px) and (max-width: 800px){
+  .ticket {
+    transform: scale(1.2);
+  }
+}
+
+@media (min-width: 801px) and (max-width: 900px){
+  .ticket {
+    transform: scale(1.4);
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1000px){
+  .ticket {
+    transform: scale(1.62);
+  }
+}
+@media (min-width: 1010px){
+  .ticket {
+   // transform: scale(1.00) rotate(-90deg)!important;
+  }
+}
 
   .left {
     display: flex;
@@ -738,3 +806,43 @@ footer a {
   }
 
 }
+
+.homepagecard {
+  width: 250px;
+  height: 430px;
+  border-radius: 5px;
+ // box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
+ // background-color: #fff;
+  background: url('./assets/imgs/cardbg.svg');
+  padding: 10px 10px;
+  position: relative;
+  border-radius: 10px;
+  margin: 0 auto;
+  margin-bottom: 100px;
+}
+
+
+.homepagecard::after {
+  position: absolute;
+  content: "";
+  height: 40px;
+  right: -20px;
+  border-radius: 40px;
+  z-index: 1;
+  top: 280px;
+  background-color: #ffffff;
+  width: 40px;
+}
+
+.homepagecard::before {
+  position: absolute;
+  content: "";
+  height: 40px;
+  left: -20px;
+  border-radius: 40px;
+  z-index: 1;
+  top: 280px;
+  background-color: #ffffff;
+  width: 40px;
+}
+

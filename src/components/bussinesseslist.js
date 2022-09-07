@@ -100,6 +100,9 @@ function BussinessesList({ bussinesses, setBussinesses, favouriteBussinesses, se
 
     return (
         <div>
+
+
+
             <h1 style={{ opacity: '0.9' }} >AVAILABLE OFFERS</h1>
             <div style={{ display: 'flex', justifyContent: 'space-evenly', flexWrap: 'wrap' }}>
                 {bussinesses && bussinesses.map((bussiness, i) => {
@@ -136,7 +139,7 @@ function BussinessesList({ bussinesses, setBussinesses, favouriteBussinesses, se
                                 <div class="ticket">
                                     <div class="left">
                                         <div class="image">
-                                            <h1 style={{ fontSize: '100px' }} >{selectedBussiness?.bussiness_discount}%</h1>
+                                            <h1 style={{ fontSize: '100px', color:'black' }} >{selectedBussiness?.bussiness_discount}%</h1>
                                             {/* <p class="admit-one">
                                                 <span> DISCOUNT </span>
                                                 <span> DISCOUNT </span>
@@ -151,7 +154,7 @@ function BussinessesList({ bussinesses, setBussinesses, favouriteBussinesses, se
                                                 <span>{new Date().getFullYear()}</span>
                                             </p>
                                             <div class="show-name">
-                                                <h4 style={{ margin: '0',color: 'rgb(205 205 205)' }} >{userName}</h4>
+                                                <h4 style={{ margin: '0',color: 'black' }} >{userName}</h4>
                                                 <h4 style={{ margin: '0' }}>{selectedBussiness?.bussiness_name}</h4>
                                             </div>
                                             {/* <div class="time">
