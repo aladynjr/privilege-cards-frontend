@@ -51,7 +51,7 @@ useEffect(() => {
   return (
     <div>
         
-        <div className={clsx("modal  ",enteranimation && 'animate slide', fullscreen && 'fullscreenmodal')} style={{ zIndex: '1000', marginTop: '0px' }} lang='ar'>
+        <div className={clsx("modal animate__animated animate__slideInUp  ",enteranimation && 'animate slide', fullscreen && 'fullscreenmodal')} style={{ zIndex: '1000', marginTop: '0px' }} lang='ar'>
                     <div  style={{ background: 'transparent', zIndex: '10', opacity: '0' }} className="overlay"></div>
                     <div className={clsx("modal-content simplecard ", fullscreen && 'fullscreenmodal')} style={{ zIndex: '10',boxShadow: '1px 0.5px 10px 1px lightslategrey', padding:'0px 10px', background: backgroundColor }}>
                         {titletext && <h1 style={{ marginBottom: '0', backgroundColor: titlebgcolor,color:titlecolor, borderRadius: '20px', padding: '0px 20px',height:' fit-content', zIndex:'5' }}>{titletext}</h1>}

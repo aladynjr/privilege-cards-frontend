@@ -84,6 +84,7 @@ function HomeScreen() {
     } catch (err) {
       console.error(err.message);
     }
+    
   };
 
 

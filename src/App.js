@@ -1,6 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.scss';
+import 'animate.css';
+
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import LoginScreen from './screens/loginscreen';
 import HomeScreen from './screens/homescreen';

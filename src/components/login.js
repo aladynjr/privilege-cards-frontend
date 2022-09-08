@@ -9,9 +9,14 @@ import {
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
+import LoadingButton from '@mui/lab/LoadingButton';
+
+import {RiLoginBoxFill} from 'react-icons/ri';
 
 
 function Login({ setLoginModal }) {
+
+
   const navigate = useNavigate();
 
   const [logging, setLogging] = useState(false)
@@ -19,8 +24,9 @@ function Login({ setLoginModal }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-
+  const [loginLoading, setLoginLoading] = useState(false)
   const login = async () => {
+    setLoginLoading(true)
     try {
       setLogging(true);
       const user = await signInWithEmailAndPassword(
@@ -42,17 +48,19 @@ function Login({ setLoginModal }) {
         setLogging(false);
       }
     }
+    setLoginLoading(false)
   };
 
 
   return (
-    <div className='joinform' style={{height:'50vh'}}>
+    <div className='joinform' style={{ height: '75vh' }}>
+      <h1>Welcome Back !</h1>
 
       <TextField variant="outlined" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
       <TextField variant="outlined" type="password" label="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
 
-      <Button variant="contained" color="success" onClick={login} >Login</Button>
+      <LoadingButton variant="contained"  color="success" onClick={login} loading={loginLoading} loadingPosition="end" endIcon={<RiLoginBoxFill />} >Login</LoadingButton>
       <Button variant="outlined" style={{ fontSize: '10px', color: 'black', border: 'none', marginTop: '20px' }} onClick={() => { setLoginModal(false) }} >Close</Button>
 
 

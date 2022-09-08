@@ -9,8 +9,9 @@ import {
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
+import LoadingButton from '@mui/lab/LoadingButton';
 
-
+import {AiOutlineUserAdd} from 'react-icons/ai'
 function Join({setJoinModal}) {
     const navigate = useNavigate();
 
@@ -43,8 +44,10 @@ const AddBussiness = async (app_user_name,app_user_email, app_user_uid) => {
   }
 };
 
+const [joinLoading, setJoinLoading] = useState(false);
 
     const register = async () => {
+      setJoinLoading(true);
         try {
           setLogging(true);
           const newUser = await createUserWithEmailAndPassword(
@@ -67,16 +70,18 @@ const AddBussiness = async (app_user_name,app_user_email, app_user_uid) => {
     
           
         }
+        setJoinLoading(false);
       };
 
   return (
     <div  className='joinform'>
+      <h1>Create An Account</h1>
         <TextField  variant="outlined" label="Name" value={newName} onChange={(e) => setNewName(e.target.value)} />
 
         <TextField  variant="outlined" label="Email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} />
         <TextField  variant="outlined"  type="password" label="Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
 
-        <Button variant="contained" color="success" onClick={register} >Create Account</Button>
+        <LoadingButton variant="contained" color="success" onClick={register} loading={joinLoading} loadingPosition="end" endIcon={<AiOutlineUserAdd />} >Create Account</LoadingButton>
 
         <Button variant="outlined" style={{fontSize:'10px', color:'black', border:'none', marginTop:'20px'}}  onClick={()=>{setJoinModal(false)}} >Close</Button>
 

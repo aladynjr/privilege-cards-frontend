@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { auth } from "../firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
 import Login from '../components/login';
-import HomeBG from '../assets/imgs/homebg.jpg';
+
 import { GiPalmTree } from 'react-icons/gi';
 import Button from '@mui/material/Button';
 import Modal from '../components/modal';
@@ -15,6 +15,7 @@ import { MdCardMembership } from 'react-icons/md';
 
 import { BiHappyHeartEyes } from 'react-icons/bi';
 
+import ProgressiveImage from "react-progressive-image-loading";
 
 
 
@@ -45,8 +46,8 @@ const [loginModal, setLoginModal] = useState(false)
   return (
     <div>
 
-      <div className="homepagehero">
-        <div className='homepagehero-inner'>
+      <div className="homepagehero animate__animated animate__fadeIn">
+        <div className='homepagehero-inner '>
           <p style={{ color: "white" }}> Larnaca City  <GiPalmTree style={{ fontSize: '30px', marginBottom: '-7px' }} /></p>
 
           <h1 style={{ color: "white" }}>Have Fun, Save Money !</h1>

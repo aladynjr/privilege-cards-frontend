@@ -49,11 +49,11 @@ function Navbar(props) {
 
   const location = useLocation();
 
-  const hideInPages = ['/']
+  const showInPages = ['/Home']
 
-  const [hideNav, setHideNav] = useState(false);
+  const [hideNav, setHideNav] = useState(true);
   useEffect(()=>{
-if(hideInPages.includes(location.pathname)){
+if(!showInPages.includes(location.pathname)){
   setHideNav(true)
 } else {
   setHideNav(false)
@@ -78,10 +78,10 @@ if(hideInPages.includes(location.pathname)){
           <Typography
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}
-            style={{fontFamily:'Crimson Pro'}}
+
+            style={{fontFamily:'Crimson Pro', margin:'auto'}}
           >
-            Larnaca City Logo <GiPalmTree style={{fontSize:'30px', marginBottom:'-7px'}} />
+          <GiPalmTree style={{fontSize:'30px', marginBottom:'-7px'}} />  Larnaca City 
           </Typography>
           {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (
