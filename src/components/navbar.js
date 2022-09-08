@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React , {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -14,6 +14,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { GiPalmTree } from 'react-icons/gi';
+import { useLocation } from 'react-router-dom';
 
 const drawerWidth = 240;
 const navItems = ['Home', 'About', 'Contact'];
@@ -46,9 +47,23 @@ function Navbar(props) {
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
+  const location = useLocation();
+
+  const hideInPages = ['/']
+
+  const [hideNav, setHideNav] = useState(false);
+  useEffect(()=>{
+if(hideInPages.includes(location.pathname)){
+  setHideNav(true)
+} else {
+  setHideNav(false)
+
+}
+  },[location.pathname])
+
   return (
     <div >
-    <Box sx={{ display: 'flex' }} >
+    {!hideNav && <Box sx={{ display: 'flex' }} >
       <AppBar component="nav"  style={{background:'#0c3064'}}  >
         <Toolbar >
           {/* <IconButton
@@ -95,7 +110,7 @@ function Navbar(props) {
         </Drawer>
       </Box>
 
-    </Box>
+    </Box>}
     </div>
   );
 }

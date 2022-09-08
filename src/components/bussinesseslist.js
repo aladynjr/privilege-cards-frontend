@@ -13,7 +13,7 @@ import BussinessCard from './bussinesscard';
 
 import WaveBG from '../assets/imgs/wavebg.svg';
 
-function BussinessesList({ bussinesses, setBussinesses, favouriteBussinesses, setFavouriteBussinesses, userID, userName, cardAvailable, loggedInButtons = false }) {
+function BussinessesList({ bussinesses, setBussinesses, favouriteBussinesses, setFavouriteBussinesses, userID, userName, cardAvailable, loggedInButtons = false,setJoinModal }) {
 
 
     const getBussinesses = async () => {
@@ -211,6 +211,7 @@ function BussinessesList({ bussinesses, setBussinesses, favouriteBussinesses, se
                 DeleteFavouriteBussiness={DeleteFavouriteBussiness}
                 favButtonLoading={favButtonLoading}
                 userID={userID}
+                setJoinModal={setJoinModal}
             />}
 
         </div>

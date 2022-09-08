@@ -10,6 +10,13 @@ import { GiPalmTree } from 'react-icons/gi';
 import Button from '@mui/material/Button';
 import Modal from '../components/modal';
 
+import { BiRestaurant } from 'react-icons/bi';
+import { MdCardMembership } from 'react-icons/md';
+
+import { BiHappyHeartEyes } from 'react-icons/bi';
+
+
+
 
 function LoginScreen() {
   const navigate = useNavigate();
@@ -54,6 +61,17 @@ const [loginModal, setLoginModal] = useState(false)
 
       </div>
 
+
+
+      <div style={{marginBlock:'50px'}}>
+      <div style={{display:'flex',flexWrap:'wrap', width:'70vw', alignItems:'center', margin:'auto',justifyContent:'center',marginBottom:'30px'}}><BiRestaurant style={{fontSize:'65px', color:'dodgerblue'}} /> <h3 style={{width:'60%', padding:'0px 40px'}}>Click on any venue to see its full listing page, including photos, description, map, and the relevant dining offer.</h3> </div>
+      <div style={{display:'flex',flexWrap:'wrap', width:'70vw', alignItems:'center', margin:'auto',justifyContent:'center',marginBottom:'30px'}}><MdCardMembership style={{fontSize:'65px', color:'coral'}} /> <h3 style={{width:'60%', padding:'0px 40px'}} >Press the "Show Your Card" button on that page, to generate your personalised Card for that venue, to show to staff when requesting the bill</h3> </div>
+      <div style={{display:'flex',flexWrap:'wrap', width:'70vw', alignItems:'center', margin:'auto',justifyContent:'center',marginBottom:'30px'}}><BiHappyHeartEyes style={{fontSize:'65px', color:'crimson'}} /> <h3 style={{width:'60%', padding:'0px 40px'}} >Get a reduced bill price with the <b style={{color:'crimson', fontWeight:'900'}} > discount</b></h3> </div>
+
+      </div>
+
+
+
       {joinModal && <Modal
         fullscreen={true}
         onClick={() => { }}
@@ -84,7 +102,14 @@ const [loginModal, setLoginModal] = useState(false)
 
       />}
 
-      <BussinessesList bussinesses={bussinesses} setBussinesses={setBussinesses} />
+      <BussinessesList 
+       bussinesses={bussinesses}
+       setBussinesses={setBussinesses}
+       
+       loggedInButtons={false}
+       cardAvailable={false}
+       setJoinModal={setJoinModal}
+        />
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import Modal from './modal';
 import { MdCardMembership } from 'react-icons/md';
 import Divider from '@mui/material/Divider';
@@ -16,7 +16,9 @@ import ImageGallery from 'react-image-gallery';
 
 import { MdFavorite } from 'react-icons/md';
 import { MdCheck } from 'react-icons/md';
-function BussinessDetailsModal({selectedBussiness,setBussinessDetailsModal,cardAvailable, setShowCard, favouriteBussinesses, AddFavouriteBussiness,userID, DeleteFavouriteBussiness,favButtonLoading}) {
+import Snackbar from '@mui/material/Snackbar';
+
+function BussinessDetailsModal({selectedBussiness,setBussinessDetailsModal,cardAvailable, setShowCard, favouriteBussinesses, AddFavouriteBussiness,userID, DeleteFavouriteBussiness,favButtonLoading, setJoinModal}) {
     var coverImages = selectedBussiness?.bussiness_cover_image_urls?.map((image) => {
         return {
             original: image,
@@ -45,6 +47,7 @@ function BussinessDetailsModal({selectedBussiness,setBussinessDetailsModal,cardA
         }
     }
 
+    const [openSnackBar, setOpenSnackBar] = useState(false)
   return (
     <div>
         <Modal
@@ -62,25 +65,35 @@ function BussinessDetailsModal({selectedBussiness,setBussinessDetailsModal,cardA
                         <div className="front__text">
                             <h3 className="front__text-header">{selectedBussiness?.bussiness_name}</h3>
                             <Button
-                                disabled={!cardAvailable}
+                               // disabled={!cardAvailable}
                                 endIcon={<MdCardMembership />}
-                                style={{ fontFamily: 'Crimson Pro', padding: '10px 50px', fontSize: '17px', background: 'limegreen' }}
+                                style={{ fontFamily: 'Crimson Pro', padding: '10px 50px', fontSize: '17px', background: 'limegreen'  }}
                                 variant="contained" color="success"
-                                onClick={() => {/*AddPrivilegeCard(selectedBussiness?.bussiness_id, selectedBussiness?.bussiness_discount);*/ setShowCard(true); }} >Show Card</Button>
+                                onClick={() => { if(!userID){ setBussinessDetailsModal(false); setJoinModal(true)} else if(!cardAvailable){setOpenSnackBar(true)} else if(userID && cardAvailable){/*AddPrivilegeCard(selectedBussiness?.bussiness_id, selectedBussiness?.bussiness_discount);*/ setShowCard(true); } }} >
+                                    Show Card & Get Discount</Button>
+                                 
 
                         </div>
 
-                        <LoadingButton
+                        <Snackbar
+                        open={openSnackBar}
+                        autoHideDuration={6000}
+                        onClose={()=>setOpenSnackBar(false)}
+                        message="You don't have a privilege card yet"
+                      //  action={action}
+                      />
+
+                        {userID && <LoadingButton
                             size="small"
-                            onClick={()=>{if(favouriteBussinesses.find(aObj => selectedBussiness?.bussiness_id === aObj?.bussiness_id)){DeleteFavouriteBussiness(userID, selectedBussiness?.bussiness_id); setBussinessDetailsModal(false)} else {AddFavouriteBussiness(userID, selectedBussiness);} }}
-                            endIcon={favouriteBussinesses.find(aObj => selectedBussiness?.bussiness_id === aObj?.bussiness_id) ? <MdCheck /> :<MdFavorite />}
+                            onClick={()=>{if(favouriteBussinesses?.find(aObj => selectedBussiness?.bussiness_id === aObj?.bussiness_id)){DeleteFavouriteBussiness(userID, selectedBussiness?.bussiness_id); setBussinessDetailsModal(false)} else {AddFavouriteBussiness(userID, selectedBussiness);} }}
+                            endIcon={favouriteBussinesses?.find(aObj => selectedBussiness?.bussiness_id === aObj?.bussiness_id) ? <MdCheck /> :<MdFavorite />}
                             loading={favButtonLoading}
                             loadingPosition="end"
                             variant="contained"
                             style={{fontSize:'10px', fontFamily:'Crimson Pro', marginTop:'-50px'}}
                         >
                             Favourite
-                        </LoadingButton>                        <div style={{ width: '50%', minWidth: '280px', margin: 'auto' }}>
+                        </LoadingButton> }                       <div style={{ width: '50%', minWidth: '280px', margin: 'auto' }}>
                             <Divider><h3><AiFillStar style={{ marginBottom: '-5px', opacity: '0.8' }} /> About </h3></Divider>
                             <p className='bussinessdetailstext' >{selectedBussiness?.bussiness_description}</p>
 
