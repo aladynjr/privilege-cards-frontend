@@ -2,17 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { auth } from "../firebase-config";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 
-function GetUserData() {
-
-    
-  const [userID, setUserID] = useState(null);
-
-  onAuthStateChanged(auth, (currentUser) => {
-    if (currentUser) {
-      setUserID(currentUser.uid)
-    }
-  });
-
+function GetUserData(userID) {
   const [userData, setUserData] = useState(null)
 
   const FetchUserData = async () => {

@@ -17,9 +17,12 @@ import HomepageCard from '../components/homepagecard';
 function HomeScreen() {
   const navigate = useNavigate();
 
+  const [userID, setUserID] = useState(null);
 
   onAuthStateChanged(auth, (currentUser) => {
-
+    if (currentUser) {
+      setUserID(currentUser.uid)
+    }
     if (currentUser && (!localStorage.getItem('isLogged'))) {
       localStorage.setItem('isLogged', 'true')
     }
@@ -29,8 +32,8 @@ function HomeScreen() {
     }
   });
 
-  const userData = GetUserData();
-
+  const userData = GetUserData(userID);
+console.log(userData)
   const logout = async () => {
     await signOut(auth);
 
