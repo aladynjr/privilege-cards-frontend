@@ -32,7 +32,7 @@ function HomeScreen() {
     }
   });
 
-  const userData = GetUserData(userID);
+  var userData = GetUserData(userID);
 console.log(userData)
   const logout = async () => {
     await signOut(auth);

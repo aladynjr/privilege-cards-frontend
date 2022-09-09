@@ -19,7 +19,7 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
 
     const getBussinesses = async () => {
         try {
-            const response = await fetch("http://localhost:4000/api/bussiness");
+            const response = await fetch("https://privilege-cards-backend.fly.dev/api/bussiness");
             const jsonData = await response.json();
 
             setBussinesses(jsonData);
@@ -45,7 +45,7 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
                 bussiness_id,
 
             };
-            const response = await fetch("http://localhost:4000/api/app_user_bussiness", {
+            const response = await fetch("https://privilege-cards-backend.fly.dev/api/app_user_bussiness", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
@@ -63,7 +63,7 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
     const DeleteFavouriteBussiness = async (app_user_id, bussiness_id) => {
         setFavButtonLoading(true)
         try {
-            const deleteBussiness = await fetch(`http://localhost:4000/api/app_user_bussiness/${app_user_id}/${bussiness_id}`, {
+            const deleteBussiness = await fetch(`https://privilege-cards-backend.fly.dev/api/app_user_bussiness/${app_user_id}/${bussiness_id}`, {
                 method: "DELETE"
             });
 

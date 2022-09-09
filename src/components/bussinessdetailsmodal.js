@@ -36,7 +36,7 @@ function BussinessDetailsModal({ selectedBussiness, setBussinessDetailsModal, ca
                 app_user_id,
                 bussiness_id,
             };
-            const response = await fetch("http://localhost:4000/api/privilege_card", {
+            const response = await fetch("http:s//lprivilege-cards-backend.fly.dev/api/privilege_card", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)

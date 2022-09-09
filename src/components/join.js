@@ -30,7 +30,7 @@ const [newPassword, setNewPassword] = useState('')
 const [repeatPassword, setRepeatPassword] = useState('')
 
 
-const AddBussiness = async (app_user_name,app_user_email, app_user_uid) => {
+const AddNewUser = async (app_user_name,app_user_email, app_user_uid) => {
 
   try {
     const body = {
@@ -38,16 +38,17 @@ const AddBussiness = async (app_user_name,app_user_email, app_user_uid) => {
       app_user_email,
       app_user_uid
     };
-    const response = await fetch("http://localhost:4000/api/app_user", {
+    const response = await fetch("https://privilege-cards-backend.fly.dev/api/app_user", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body)
     });
-
     // window.location = "/";
   } catch (err) {
     console.error(err.message);
   }
+  window.location.reload(false);
+
 };
 
 const [joinLoading, setJoinLoading] = useState(false);
@@ -64,8 +65,8 @@ const [joinLoading, setJoinLoading] = useState(false);
           console.log(newUser.user.uid);
 
 
-          AddBussiness(newName, newEmail, newUser.user.uid)
-          navigate('/Home')
+          AddNewUser(newName, newEmail, newUser.user.uid)
+          
         } catch (error) {
           if (error.message == 'Firebase: Error (auth/invalid-email).') { setSignupError('الرجاء إعادة تفقّد الإيميل'); }
           if (error.message == 'Firebase: Error (auth/email-already-in-use).') { setSignupError('الإيميل مستخدم في حساب آخر'); }
