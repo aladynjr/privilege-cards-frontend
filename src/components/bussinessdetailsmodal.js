@@ -28,6 +28,7 @@ function BussinessDetailsModal({ selectedBussiness, setBussinessDetailsModal, ca
 
     })
     const AddPrivilegeCard = async (bussiness_id, privilege_card_discount) => {
+        setCardLoading(true)
         const app_user_id = userID;
         try {
             const body = {
@@ -36,7 +37,7 @@ function BussinessDetailsModal({ selectedBussiness, setBussinessDetailsModal, ca
                 bussiness_id,
                 
             };
-            const response = await fetch("http://localhost:8080/api/privilege_card", {
+            const response = await fetch("https://privilege-cards-backend.fly.dev/api/privilege_card", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
@@ -45,16 +46,20 @@ function BussinessDetailsModal({ selectedBussiness, setBussinessDetailsModal, ca
 
             setCardID(jsonData[0]?.privilege_card_id);
 console.log(jsonData)
+setShowCard(true);
             // window.location = "/";
         } catch (err) {
             console.error(err.message);
         }
+        setCardLoading(false)
     }
 
     const [openSnackBar, setOpenSnackBar] = useState(false)
 
     const [bgLoaded, setBgLoaded] = useState(false);
     const [profileLoaded, setProfileLoaded] = useState(false)
+
+const [cardLoading, setCardLoading] = useState(false);
 
     return (
         <div>
@@ -77,13 +82,14 @@ console.log(jsonData)
 
                         <div className="front__text">
                             <h3 className="front__text-header">{selectedBussiness?.bussiness_name}</h3>
-                            <Button
+                            <LoadingButton
+                            loading={cardLoading} loadingPosition="end"
                                 // disabled={!cardAvailable}
                                 endIcon={<MdCardMembership />}
                                 style={{ fontFamily: 'Crimson Pro', padding: '10px 50px', fontSize: '17px', background: 'limegreen' }}
                                 variant="contained" color="success"
-                                onClick={() => { if (!userID) { setBussinessDetailsModal(false); setJoinModal(true) } else if (!cardAvailable) { setOpenSnackBar(true) } else if (userID && cardAvailable) {AddPrivilegeCard(selectedBussiness?.bussiness_id, selectedBussiness?.bussiness_discount); setShowCard(true); } }} >
-                                Show Card & Get Discount</Button>
+                                onClick={() => { if (!userID) { setBussinessDetailsModal(false); setJoinModal(true) } else if (!cardAvailable) { setOpenSnackBar(true) } else if (userID && cardAvailable) {AddPrivilegeCard(selectedBussiness?.bussiness_id, selectedBussiness?.bussiness_discount);  } }} >
+                                Show Card & Get Discount</LoadingButton>
 
 
                         </div>

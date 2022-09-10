@@ -7,7 +7,7 @@ function GetUserData(userID) {
 
   const FetchUserData = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/app_user/${userID}`);
+      const response = await fetch(`https://privilege-cards-backend.fly.dev/api/app_user/${userID}`);
       const jsonData = await response.json();
 
       setUserData(jsonData);

@@ -4,7 +4,9 @@
 
 @import "~react-image-gallery/styles/scss/image-gallery.scss";
 
-
+// * {
+//   outline: 1px solid #f00 !important;
+// }
 .App {
   text-align: center;
   font-family: 'Cormorant Garamond', serif;
@@ -561,9 +563,7 @@ footer a {
   }
 }
 
-// * {
-//   outline: 1px solid #f00 !important;
-//  }
+
 
 .bussinessprivilegecard {
 
@@ -699,6 +699,7 @@ footer a {
     align-items: flex-end;
     padding: 5px;
     font-size: 35px;
+    color: #343131!important;
   }
 
   .ticket-info {
@@ -809,6 +810,7 @@ footer a {
 
   .barcode {
     height: 100px;
+    margin-top: -28px;
   }
 
   .barcode img {
@@ -816,7 +818,6 @@ footer a {
   }
 
   .right .ticket-number {
-    color: gray;
     font-size: 21px;
     margin-bottom: -20px;
     font-weight: 900;
@@ -965,7 +966,7 @@ p{
     justify-content: center;
     flex-direction: column;
     background: whitesmoke;
-    width: 280px;
+    width: 250px;
     margin: 0px auto;
     padding: 30px;
     border-radius: 20px;
@@ -992,4 +993,16 @@ p{
       calc(-1.5*var(--r)) calc(-1.5*var(--r)) /calc(3*var(--r)) calc(3*var(--r)),
     linear-gradient(wheat 0 0)  no-repeat
       50%/calc(100% - 3*var(--r)) calc(100% - 3*var(--r));
+}
+.copybutton {
+  position: absolute!important;
+    bottom: 28px!important;
+    right: 26px!important;
+    min-width: 0!important;
+    font-size: 25px!important;
+    background: transparent!important;
+    color: #777777!important;
+    border: 1px solid #f1f1f1!important;
+    width: 113px!important;
+    margin-right: 19px!important;
 }

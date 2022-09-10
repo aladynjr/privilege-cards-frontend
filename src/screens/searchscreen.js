@@ -17,7 +17,7 @@ function SearchScreen() {
     const [bussinessesLabel, setBussinessesLabel] = useState([]);
     const getBussinesses = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/bussiness");
+            const response = await fetch("https://privilege-cards-backend.fly.dev/api/bussiness");
             const jsonData = await response.json();
 
             setBussinesses(jsonData);
@@ -50,7 +50,7 @@ function SearchScreen() {
         setCards([])
 
         try {
-            const response = await fetch(`http://localhost:8080/api/privilege_card/bussiness/${id}`);
+            const response = await fetch(`https://privilege-cards-backend.fly.dev/api/privilege_card/bussiness/${id}`);
             const jsonData = await response.json();
 
             setCards(jsonData);
@@ -71,7 +71,7 @@ function SearchScreen() {
         setCard(null)
 
         try {
-            const response = await fetch(`http://localhost:8080/api/privilege_card/${id}`);
+            const response = await fetch(`https://privilege-cards-backend.fly.dev/api/privilege_card/${id}`);
             const jsonData = await response.json();
 
             setCard(jsonData);
@@ -109,7 +109,7 @@ function SearchScreen() {
             <h1>Verify Card</h1>
             <div style={{display: 'flex', alignItems: 'flex-start', flexDirection: 'column', margin: '0 auto', width: 'fit-content'}} ><div><BsFillCheckCircleFill style={{color:'limegreen'}} /> : Card Exists and is New </div> <div><BsFillCheckCircleFill style={{color:'yellow'}} /> : Card Made On Different Day </div> <div> <AiFillCloseSquare style={{color:'red'}} /> : Card Does Not Exist  </div>  </div>
             <div className='searchcard'>
-                <TextField variant="outlined" label="Card ID Number (Numbers Only*)" value={cardID} onChange={(e) => {if(/^[0-9\b]+$/.test(e.target.value)){setCardID(e.target.value)}}} />
+                <TextField variant="outlined" label="Card ID Number (Numbers Only*)" value={cardID} onChange={(e) => {if(/^[0-9\b]+$/.test(e.target.value) || (e.target.value =='')){setCardID(e.target.value)}}} />
                 <LoadingButton style={{ marginTop: '30px' }} variant="contained" onClick={() => { if (parseInt(cardID, 10)) { GetCard(parseInt(cardID, 10)) } }} loading={checking} loadingPosition="end" endIcon={<BsFillPlayFill />} >Check Card</LoadingButton>
 
                 {result=='valid' && <BsFillCheckCircleFill style={{ fontSize: '80px', color: 'limegreen', marginTop: '28px' }} className='animate__animated animate__heartBeat' />}

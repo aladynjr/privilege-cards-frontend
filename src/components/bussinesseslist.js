@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import Modal from './modal';
+import Snackbar from '@mui/material/Snackbar';
 
 
 
@@ -11,15 +12,21 @@ import BussinessDetailsModal from './bussinessdetailsmodal';
 import Divider from '@mui/material/Divider';
 import BussinessCard from './bussinesscard';
 import { AiFillCloseCircle } from 'react-icons/ai';
+import { BiCopyAlt } from 'react-icons/bi';
+
 
 import WaveBG from '../assets/imgs/wavebg.svg';
+
+import copy from 'copy-to-clipboard';
+
+
 
 function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favouriteBussinesses, setFavouriteBussinesses, userID, userName, cardAvailable, loggedInButtons = false, setJoinModal }) {
 
 
     const getBussinesses = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/bussiness");
+            const response = await fetch("https://privilege-cards-backend.fly.dev/api/bussiness");
             const jsonData = await response.json();
 
             setBussinesses(jsonData);
@@ -45,7 +52,7 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
                 bussiness_id,
 
             };
-            const response = await fetch("http://localhost:8080/api/app_user_bussiness", {
+            const response = await fetch("https://privilege-cards-backend.fly.dev/api/app_user_bussiness", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
@@ -63,7 +70,7 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
     const DeleteFavouriteBussiness = async (app_user_id, bussiness_id) => {
         setFavButtonLoading(true)
         try {
-            const deleteBussiness = await fetch(`http://localhost:8080/api/app_user_bussiness/${app_user_id}/${bussiness_id}`, {
+            const deleteBussiness = await fetch(`https://privilege-cards-backend.fly.dev/api/app_user_bussiness/${app_user_id}/${bussiness_id}`, {
                 method: "DELETE"
             });
 
@@ -90,10 +97,19 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
 
     const [cardID, setCardID] =useState(0)
 console.log(cardID)
+
+const [copyAlert, setCopyAlert] = useState(false)
+console.log(copyAlert)
     return (
         <div>
 
-
+<Snackbar
+        open={copyAlert}
+        autoHideDuration={6000}
+        onClose={()=>setCopyAlert(false)}
+        message="Privilege Card Code Copied "
+        style={{zIndex:'99999'}}
+        />
 
             <h1 style={{ opacity: '0.9' }} >AVAILABLE OFFERS</h1>
             <div style={{ display: 'flex', justifyContent: 'space-evenly', flexWrap: 'wrap' }}>
@@ -138,7 +154,7 @@ console.log(cardID)
                     titlecolor='whitesmoke'
                     bodytext={
                         <div>
-                            <AiFillCloseCircle className='animate__animated animate__fadeIn' style={{ display: showCard ? 'none' : 'block',fontSize: '30px', position: 'fixed', top: '70px', right: '22px', cursor: 'pointer', zIndex: '10001', color:'darkgrey'}} onClick={() => setShowCard(false)} />
+                            <AiFillCloseCircle className='animate__animated animate__fadeIn' style={{ display: showCard ? 'block' : 'none',fontSize: '30px', position: 'fixed', top: '40px', right: '22px', cursor: 'pointer', zIndex: '9999991', color:'darkgrey'}} onClick={() => setShowCard(false)} />
 
                             <link rel="stylesheet"
                                 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
@@ -193,11 +209,10 @@ console.log(cardID)
 
                                             </div>
                                             <div class="barcode">
-                                                <img width={'40px'} style={{ cursor: 'pointer', marginTop: '33px' }} src={'https://avatars.dicebear.com/api/identicon/' + String(cardID).padStart(4, '0') + '.svg?mood[]=happy'} />
+                                                <img width={'30px'} style={{ cursor: 'pointer', marginTop: '33px' }} src={'https://avatars.dicebear.com/api/identicon/' + String(cardID).padStart(4, '0') + '.svg?mood[]=happy'} />
                                             </div>
-                                            <p class="ticket-number">
-                                                {String(cardID).padStart(4, '0')}
-                                            </p>
+                                          <p class="ticket-number"> {String(cardID).padStart(4, '0')}</p> 
+                                        <Button variant="contained"  className='copybutton' onClick={()=>{ copy(String(cardID).padStart(4, '0'));setCopyAlert(true); }} ><BiCopyAlt style={{marginLeft: '60px'}} /></Button>
                                         </div>
                                     </div>
                                 </div>
@@ -211,7 +226,7 @@ console.log(cardID)
             </div>
 
 
-
+ 
   
 
         </div>
