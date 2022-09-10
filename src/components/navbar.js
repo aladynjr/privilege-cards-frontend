@@ -49,7 +49,7 @@ function Navbar(props) {
 
   const location = useLocation();
 
-  const showInPages = ['/Home']
+  const showInPages = ['/Home', '/verify']
 
   const [hideNav, setHideNav] = useState(true);
   useEffect(()=>{

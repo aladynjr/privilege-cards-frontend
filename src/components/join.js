@@ -38,7 +38,7 @@ const AddNewUser = async (app_user_name,app_user_email, app_user_uid) => {
       app_user_email,
       app_user_uid
     };
-    const response = await fetch("https://privilege-cards-backend.fly.dev/api/app_user", {
+    const response = await fetch("http://localhost:8080/api/app_user", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body)

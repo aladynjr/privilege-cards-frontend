@@ -11,9 +11,9 @@
   font-weight: 500;
 }
 
-* {
-  transition: all 0.5s ease;
-}
+// * {
+//   transition: all 0.5s ease;
+// }
 .bussinesscard {
   border: 1px solid black;
 }
@@ -55,6 +55,8 @@ $card-width: 400px;
 
   .front__bkg-photo {
     height: 230px !important;
+    object-fit: cover;
+    max-width: 90vw;
   }
 }
 
@@ -874,7 +876,8 @@ footer a {
 
 body{
   margin: 0;
-  margin-top: 100px;
+  margin-block: 100px;
+
 }
 
 .homebg {
@@ -956,3 +959,37 @@ p{
   }
 }
 
+.searchcard {
+  display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: whitesmoke;
+    width: 280px;
+    margin: 0px auto;
+    padding: 30px;
+    border-radius: 20px;
+    margin-block: 40px;
+    justify-content: flex-start;
+    height: 230px;
+
+    
+}
+
+.searchcard{
+  p{
+    margin-block: 8px;
+    font-size: 22px;
+  }
+}
+
+.ticketlook{
+  --r: 10px; /* control the radius of the circles */
+  padding: calc(2*var(--r));
+  filter: grayscale(.4);
+  background: 
+    radial-gradient(var(--r),#0000 98%,wheat) round
+      calc(-1.5*var(--r)) calc(-1.5*var(--r)) /calc(3*var(--r)) calc(3*var(--r)),
+    linear-gradient(wheat 0 0)  no-repeat
+      50%/calc(100% - 3*var(--r)) calc(100% - 3*var(--r));
+}

@@ -19,7 +19,7 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
 
     const getBussinesses = async () => {
         try {
-            const response = await fetch("https://privilege-cards-backend.fly.dev/api/bussiness");
+            const response = await fetch("http://localhost:8080/api/bussiness");
             const jsonData = await response.json();
 
             setBussinesses(jsonData);
@@ -45,7 +45,7 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
                 bussiness_id,
 
             };
-            const response = await fetch("https://privilege-cards-backend.fly.dev/api/app_user_bussiness", {
+            const response = await fetch("http://localhost:8080/api/app_user_bussiness", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
@@ -63,7 +63,7 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
     const DeleteFavouriteBussiness = async (app_user_id, bussiness_id) => {
         setFavButtonLoading(true)
         try {
-            const deleteBussiness = await fetch(`https://privilege-cards-backend.fly.dev/api/app_user_bussiness/${app_user_id}/${bussiness_id}`, {
+            const deleteBussiness = await fetch(`http://localhost:8080/api/app_user_bussiness/${app_user_id}/${bussiness_id}`, {
                 method: "DELETE"
             });
 
@@ -86,19 +86,10 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
 
     const [bussinessDetailsModal, setBussinessDetailsModal] = useState(false)
 
-    console.log(selectedBussiness?.bussiness_cover_image_urls)
-    function GetCurrentDateAndTime() {
-        var date = new Date();
-        var hours = new Date().getHours();
-        var minutes = date.getMinutes();
-        var seconds = date.getSeconds();
-        var day = new Date().getDate();
-        var month = date.getMonth() + 1;
-        var year = new Date().getFullYear();
-        return day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
 
-    }
 
+    const [cardID, setCardID] =useState(0)
+console.log(cardID)
     return (
         <div>
 
@@ -112,13 +103,30 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
                     return (
                         <div key={i}>
 
-                            <BussinessCard bussiness={bussiness} setSelectedBussiness={setSelectedBussiness} setBussinessDetailsModal={setBussinessDetailsModal} />
+                            <BussinessCard bussiness={bussiness} setSelectedBussiness={setSelectedBussiness} setBussinessDetailsModal={setBussinessDetailsModal}  />
 
 
                         </div>
                     )
                 })}
             </div>
+
+
+
+            {bussinessDetailsModal && <BussinessDetailsModal
+                selectedBussiness={selectedBussiness}
+                setBussinessDetailsModal={setBussinessDetailsModal}
+                cardAvailable={cardAvailable}
+                setShowCard={setShowCard}
+                favouriteBussinesses={favouriteBussinesses}
+                AddFavouriteBussiness={AddFavouriteBussiness}
+                DeleteFavouriteBussiness={DeleteFavouriteBussiness}
+                favButtonLoading={favButtonLoading}
+                userID={userID}
+                setJoinModal={setJoinModal}
+                showCard={showCard}
+                setCardID={setCardID}
+            />}
 
 
 
@@ -130,7 +138,7 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
                     titlecolor='whitesmoke'
                     bodytext={
                         <div>
-                            <AiFillCloseCircle className='animate__animated animate__fadeIn' style={{ fontSize: '50px', position: 'fixed', top: '70px', right: '70px', cursor: 'pointer', opacity: '0.7' }} onClick={() => setShowCard(false)} />
+                            <AiFillCloseCircle className='animate__animated animate__fadeIn' style={{ display: showCard ? 'none' : 'block',fontSize: '30px', position: 'fixed', top: '70px', right: '22px', cursor: 'pointer', zIndex: '10001', color:'darkgrey'}} onClick={() => setShowCard(false)} />
 
                             <link rel="stylesheet"
                                 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
@@ -185,10 +193,10 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
 
                                             </div>
                                             <div class="barcode">
-                                                <img width={'40px'} style={{ cursor: 'pointer', marginTop: '33px' }} src={'https://avatars.dicebear.com/api/identicon/' + String(selectedBussiness?.bussiness_id).padStart(4, '0') + '.svg?mood[]=happy'} />
+                                                <img width={'40px'} style={{ cursor: 'pointer', marginTop: '33px' }} src={'https://avatars.dicebear.com/api/identicon/' + String(cardID).padStart(4, '0') + '.svg?mood[]=happy'} />
                                             </div>
                                             <p class="ticket-number">
-                                                {Math.floor(1000 + Math.random() * 9000)}{String(selectedBussiness?.bussiness_id).padStart(4, '0')}
+                                                {String(cardID).padStart(4, '0')}
                                             </p>
                                         </div>
                                     </div>
@@ -204,19 +212,7 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
 
 
 
-            {bussinessDetailsModal && <BussinessDetailsModal
-                selectedBussiness={selectedBussiness}
-                setBussinessDetailsModal={setBussinessDetailsModal}
-                cardAvailable={cardAvailable}
-                setShowCard={setShowCard}
-                favouriteBussinesses={favouriteBussinesses}
-                AddFavouriteBussiness={AddFavouriteBussiness}
-                DeleteFavouriteBussiness={DeleteFavouriteBussiness}
-                favButtonLoading={favButtonLoading}
-                userID={userID}
-                setJoinModal={setJoinModal}
-                showCard={showCard}
-            />}
+  
 
         </div>
     )

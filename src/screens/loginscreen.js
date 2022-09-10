@@ -50,7 +50,7 @@ const [loginModal, setLoginModal] = useState(false)
         <div className='homepagehero-inner '>
           <p style={{ color: "white" }}> Larnaca City  <GiPalmTree style={{ fontSize: '30px', marginBottom: '-7px' }} /></p>
 
-          <h1 style={{ color: "white" }}>Have Fun, Save Money !</h1>
+          <h1 style={{ color: "white" }}>Have Fun, Save Money!</h1>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', width: '100%', justifyContent: 'center' }} >
             <Button variant="contained" style={{ fontSize: '20px', color: "white", width: 'max-content', background: 'limegreen', fontFamily: 'Crimson Pro' }} onClick={()=>setJoinModal(true)} >GET STARTED</Button>

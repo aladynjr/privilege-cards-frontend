@@ -19,7 +19,7 @@ import { MdCheck } from 'react-icons/md';
 import Snackbar from '@mui/material/Snackbar';
 import Skeleton from '@mui/material/Skeleton';
 import { AiFillCloseCircle } from 'react-icons/ai';
-function BussinessDetailsModal({ selectedBussiness, setBussinessDetailsModal, cardAvailable, setShowCard, favouriteBussinesses, AddFavouriteBussiness, userID, DeleteFavouriteBussiness, favButtonLoading, setJoinModal,showCard }) {
+function BussinessDetailsModal({ selectedBussiness, setBussinessDetailsModal, cardAvailable, setShowCard, favouriteBussinesses, AddFavouriteBussiness, userID, DeleteFavouriteBussiness, favButtonLoading, setJoinModal,showCard,setCardID }) {
     var coverImages = selectedBussiness?.bussiness_cover_image_urls?.map((image) => {
         return {
             original: image,
@@ -27,7 +27,6 @@ function BussinessDetailsModal({ selectedBussiness, setBussinessDetailsModal, ca
         }
 
     })
-
     const AddPrivilegeCard = async (bussiness_id, privilege_card_discount) => {
         const app_user_id = userID;
         try {
@@ -35,13 +34,17 @@ function BussinessDetailsModal({ selectedBussiness, setBussinessDetailsModal, ca
                 privilege_card_discount,
                 app_user_id,
                 bussiness_id,
+                
             };
-            const response = await fetch("http:s//lprivilege-cards-backend.fly.dev/api/privilege_card", {
+            const response = await fetch("http://localhost:8080/api/privilege_card", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
             });
+            const jsonData = await response.json();
 
+            setCardID(jsonData[0]?.privilege_card_id);
+console.log(jsonData)
             // window.location = "/";
         } catch (err) {
             console.error(err.message);
@@ -55,7 +58,7 @@ function BussinessDetailsModal({ selectedBussiness, setBussinessDetailsModal, ca
 
     return (
         <div>
-            <AiFillCloseCircle className='animate__animated animate__fadeIn' style={{ display: showCard ? 'none' : 'block',fontSize: '50px', position: 'fixed', top: '70px', right: '70px', cursor: 'pointer', zIndex: '10001', opacity: '0.7' }} onClick={() => setBussinessDetailsModal(false)} />
+            <AiFillCloseCircle className='animate__animated animate__fadeIn' style={{ display: showCard ? 'none' : 'block',fontSize: '30px', position: 'fixed', top: '70px', right: '22px', cursor: 'pointer', zIndex: '10001', color:'darkgrey'}} onClick={() => setBussinessDetailsModal(false)} />
 
             <Modal
                 fullscreen={true}
@@ -79,7 +82,7 @@ function BussinessDetailsModal({ selectedBussiness, setBussinessDetailsModal, ca
                                 endIcon={<MdCardMembership />}
                                 style={{ fontFamily: 'Crimson Pro', padding: '10px 50px', fontSize: '17px', background: 'limegreen' }}
                                 variant="contained" color="success"
-                                onClick={() => { if (!userID) { setBussinessDetailsModal(false); setJoinModal(true) } else if (!cardAvailable) { setOpenSnackBar(true) } else if (userID && cardAvailable) {/*AddPrivilegeCard(selectedBussiness?.bussiness_id, selectedBussiness?.bussiness_discount);*/ setShowCard(true); } }} >
+                                onClick={() => { if (!userID) { setBussinessDetailsModal(false); setJoinModal(true) } else if (!cardAvailable) { setOpenSnackBar(true) } else if (userID && cardAvailable) {AddPrivilegeCard(selectedBussiness?.bussiness_id, selectedBussiness?.bussiness_discount); setShowCard(true); } }} >
                                 Show Card & Get Discount</Button>
 
 

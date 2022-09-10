@@ -9,7 +9,7 @@ function BussinessCard({ bussiness, setSelectedBussiness, setBussinessDetailsMod
     const [bgLoaded, setBgLoaded] = useState(false)
     const [profileLoaded, setProfileLoaded] = useState(false)
     return (
-        <div>
+        <div style={{marginInline:'20px'}}>
             <div className="outer-div">
                 <div className="inner-div">
                     <div className="front">

@@ -29,7 +29,7 @@ const [favButtonLoading, setFavButtonLoading] = useState(false)
                 bussiness_id,
 
             };
-            const response = await fetch("https://privilege-cards-backend.fly.dev/api/app_user_bussiness", {
+            const response = await fetch("http://localhost:8080/api/app_user_bussiness", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
@@ -47,7 +47,7 @@ const [favButtonLoading, setFavButtonLoading] = useState(false)
     const DeleteFavouriteBussiness = async (app_user_id,bussiness_id) => {
         setFavButtonLoading(true)
         try {
-            const deleteBussiness = await fetch(`https://privilege-cards-backend.fly.dev/api/app_user_bussiness/${app_user_id}/${bussiness_id}`, {
+            const deleteBussiness = await fetch(`http://localhost:8080/api/app_user_bussiness/${app_user_id}/${bussiness_id}`, {
                 method: "DELETE"
             });
 
@@ -70,7 +70,7 @@ const [favButtonLoading, setFavButtonLoading] = useState(false)
                 app_user_id,
                 bussiness_id,
             };
-            const response = await fetch("https://privilege-cards-backend.fly.dev/api/privilege_card", {
+            const response = await fetch("http://localhost:8080/api/privilege_card", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)

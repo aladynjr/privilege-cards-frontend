@@ -8,6 +8,8 @@ import LoginScreen from './screens/loginscreen';
 import HomeScreen from './screens/homescreen';
 import Navbar from './components/navbar';
 
+import SearchScreen from './screens/searchscreen';
+
 function App() {
   return (
     <div className="App">
@@ -18,6 +20,8 @@ function App() {
           <Route exact path="/" element={<LoginScreen />} />
           
           <Route exact path="/Home" element={<HomeScreen />} />
+
+          <Route exact path="/Verify" element={<SearchScreen />} />
 
 
         </Routes>
