@@ -17,8 +17,9 @@ import { BiHappyHeartEyes } from 'react-icons/bi';
 
 import ProgressiveImage from "react-progressive-image-loading";
 
+import VerificationScreen from './verificationscreen';
 
-
+import { Divider } from '@mui/material';
 function LoginScreen() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -42,7 +43,7 @@ function LoginScreen() {
 const [joinModal, setJoinModal] = useState(false)
 const [loginModal, setLoginModal] = useState(false)
 
-
+const [showVerification, setShowVerification] = useState(false)
   return (
     <div>
 
@@ -111,6 +112,16 @@ const [loginModal, setLoginModal] = useState(false)
        cardAvailable={false}
        setJoinModal={setJoinModal}
         />
+
+        <Divider style={{margin:'auto',width:'70%', marginBlock:'100px'}} />
+
+  <div style={{marginBottom:'50px'}} >
+
+  {!showVerification && <a style={{fontSize:'25px', color:'coral', textDecoration:'underline', cursor:'pointer'}} onClick={()=>{ setShowVerification(true)}} >Verify Card </a>}
+
+  {showVerification && <div className="animate__animated animate__fadeInDown"> <VerificationScreen  /></div>}
+  </div>
+       
     </div>
   )
 }

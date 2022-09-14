@@ -11,6 +11,7 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
 
+import { userSchema } from '../validations/joinuservalidation';
 
 import {SiFastapi} from 'react-icons/si'
 
@@ -29,6 +30,28 @@ const [newEmail, setNewEmail] = useState('')
 const [newPassword, setNewPassword] = useState('')
 const [repeatPassword, setRepeatPassword] = useState('')
 
+const [validationError, setValidationError] = useState('')
+
+function ValidateData(){
+  setValidationError('');
+  let data = {
+    name : newName,
+    email : newEmail,
+    password : newPassword,
+   
+
+  }
+
+  userSchema.validate(data).then((valid) => {
+    console.log('valid', valid)
+    register()
+  }).catch((err) => {
+    console.log('err', err.errors[0])
+    setValidationError(err.errors[0])
+   
+  })
+  return (!validationError);
+}
 
 const AddNewUser = async (app_user_name,app_user_email, app_user_uid) => {
 
@@ -102,7 +125,14 @@ const [joinLoading, setJoinLoading] = useState(false);
         <TextField  variant="outlined" label="Email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} />
         <TextField  variant="outlined"  type="password" label="Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
 
-        <LoadingButton variant="contained" color="success" onClick={register} loading={joinLoading} loadingPosition="end" endIcon={<AiOutlineUserAdd />} >Create Account</LoadingButton>
+        {validationError && <div className="validationErrors">
+                 
+                 <div className="validationError">
+                   {validationError}
+                 </div>
+         </div>}
+
+        <LoadingButton variant="contained" color="success" onClick={()=>{ ValidateData()}} loading={joinLoading} loadingPosition="end" endIcon={<AiOutlineUserAdd />} >Create Account</LoadingButton>
         
 
         <Button variant="outlined" style={{fontSize:'10px', color:'black', border:'none', marginTop:'20px'}}  onClick={()=>{setJoinModal(false)}} >Close</Button>

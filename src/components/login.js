@@ -13,22 +13,45 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import {RiLoginBoxFill} from 'react-icons/ri';
 
+import {userSchema} from '../validations/loginuservalidation';
 
 function Login({ setLoginModal }) {
 
 
   const navigate = useNavigate();
 
-  const [logging, setLogging] = useState(false)
+
   const [loginError, setLoginError] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+
+  const [validationError, setValidationError] = useState('')
+function ValidateData(){
+  setValidationError('');
+  let data = {
+    email : email,
+    password : password,
+   
+  }
+
+  userSchema.validate(data).then((valid) => {
+    console.log('valid', valid)
+    login()
+  }).catch((err) => {
+    console.log('err', err.errors[0])
+    setValidationError(err.errors[0])
+   
+  })
+  return (!validationError);
+}
+
 
   const [loginLoading, setLoginLoading] = useState(false)
   const login = async () => {
     setLoginLoading(true)
     try {
-      setLogging(true);
+
       const user = await signInWithEmailAndPassword(
         auth,
         email,
@@ -41,12 +64,10 @@ function Login({ setLoginModal }) {
       navigate('/Home')
     } catch (error) {
       console.log(error.message);
-      if (error.message == 'Firebase: Error (auth/user-not-found).') { setLoginError(' الرجاء إعادة التثبت من المعلومات'); setLogging(false); }
-      if (error.message == 'Firebase: Error (auth/invalid-email).') { setLoginError('الرّجاء إعادة تفقّد الإيميل '); setLogging(false); }
-      if (error.message == 'Firebase: Error (auth/wrong-password).') {
-        setLoginError('كلمة السر خاطئة');
-        setLogging(false);
-      }
+      if (error.message == 'Firebase: Error (auth/user-not-found).') { setLoginError('User not found');  }
+      if (error.message == 'Firebase: Error (auth/invalid-email).') { setLoginError('Please re-check the e-mail'); }
+      if (error.message == 'Firebase: Error (auth/wrong-password).') {setLoginError('Wrong password');}
+      if(error.message == 'Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests).'){setLoginError('Access to this account is temporarily disabled');}
     }
     setLoginLoading(false)
   };
@@ -59,8 +80,14 @@ function Login({ setLoginModal }) {
       <TextField variant="outlined" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
       <TextField variant="outlined" type="password" label="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
-
-      <LoadingButton variant="contained"  color="success" onClick={login} loading={loginLoading} loadingPosition="end" endIcon={<RiLoginBoxFill />} >Login</LoadingButton>
+      {(validationError || loginError) && <div className="validationErrors">
+                 
+                 <div className="validationError">
+                   {validationError}
+                  <p> {loginError}</p>
+                 </div>
+         </div>}
+      <LoadingButton variant="contained"  color="success" onClick={ ()=>{ValidateData()}} loading={loginLoading} loadingPosition="end" endIcon={<RiLoginBoxFill />} >Login</LoadingButton>
       <Button variant="outlined" style={{ fontSize: '10px', color: 'black', border: 'none', marginTop: '20px' }} onClick={() => { setLoginModal(false) }} >Close</Button>
 
 

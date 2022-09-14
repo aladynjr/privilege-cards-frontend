@@ -12,7 +12,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import { MdOutlineExpandMore } from 'react-icons/md';
 import { MdFavorite } from 'react-icons/md';
 import HomepageCard from '../components/homepagecard';
-
+import SearchScreen from './verificationscreen';
 
 function HomeScreen() {
   const navigate = useNavigate();
@@ -133,7 +133,7 @@ console.log(userData)
       />
 
 
-
+<SearchScreen />
       <Button variant="contained" color="error" onClick={() => { logout() }} >logout</Button>
     </div>
 

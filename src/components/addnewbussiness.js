@@ -47,7 +47,7 @@ function AddNewBussiness({ bussinesses, setBussinesses }) {
 
   const [validationError, setValidationError] = useState(null);
 
-  function ValidateData(){
+  const ValidateData= async()=>{
     setValidationError(null);
     let data = {
       bussiness_name,
@@ -66,13 +66,18 @@ function AddNewBussiness({ bussinesses, setBussinesses }) {
     }
 
     bussinessSchema.validate(data).then((valid) => {
-      console.log('valid')
+      console.log('valid');
+      setValidationError(null);
+      setUploadLoading(true); 
+
+       UploadProfilePhoto(); 
+       UploadCoverPhoto();
     }).catch((err) => {
       console.log('err', err.errors[0])
       setValidationError(err.errors[0])
      
     })
-    return (validationError?.length >0);
+    return (!validationError?.length);
   }
 
 
@@ -288,21 +293,18 @@ function AddNewBussiness({ bussinesses, setBussinesses }) {
 
 
           </div>}
-          <Divider style={{ backgorund: 'grey', marginBlock: '20px', width: '70%' }} />
+          {/* <Divider style={{ backgorund: 'grey', marginBlock: '20px', width: '70%' }} /> */}
 
           {validationError && <div className="validationErrors">
                  
                   <div className="validationError">
                     {validationError}
                   </div>
-                
-              
-
           </div>}
         </div>
         <LoadingButton
           size='large'
-          onClick={() => {console.log(ValidateData());/* setUploadLoading(true); UploadProfilePhoto(); UploadCoverPhoto();*/ }}
+          onClick={() => {ValidateData()}}
           endIcon={<SiAddthis />}
           loading={uploadLoading}
           loadingPosition="end"

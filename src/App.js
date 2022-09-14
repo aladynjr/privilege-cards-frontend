@@ -8,7 +8,7 @@ import LoginScreen from './screens/loginscreen';
 import HomeScreen from './screens/homescreen';
 import Navbar from './components/navbar';
 import DashboardScreen from './screens/dashboardscreen';
-import SearchScreen from './screens/searchscreen';
+import VerificationScreen from './screens/verificationscreen';
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
           
           <Route exact path="/Home" element={<HomeScreen />} />
 
-          <Route exact path="/Verify" element={<SearchScreen />} />
+          <Route exact path="/Verify" element={<VerificationScreen />} />
 
           <Route exact path="/add" element={<DashboardScreen />} />
 

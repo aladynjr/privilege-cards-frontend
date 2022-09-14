@@ -4,14 +4,11 @@ import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import { BsFillPlayFill } from 'react-icons/bs'
 import LoadingButton from '@mui/lab/LoadingButton';
-
 import { BsFillCheckCircleFill } from 'react-icons/bs'
 import { AiFillCloseSquare } from 'react-icons/ai'
-
 import Divider from '@mui/material/Divider';
 
-
-function SearchScreen() {
+function VerificationScreen() {
 
     const [bussinesses, setBussinesses] = useState(null);
     const [bussinessesLabel, setBussinessesLabel] = useState([]);
@@ -24,8 +21,6 @@ function SearchScreen() {
         } catch (err) {
             console.error(err.message);
         }
-
-
     };
 
     // useEffect(() => {
@@ -57,12 +52,9 @@ function SearchScreen() {
         } catch (err) {
             console.error(err.message);
         }
-
-
     };
 
     const [cardID, setCardID] = useState('');
-
     const [card, setCard] = useState(null)
     const [checking, setChecking] = useState(false)
 
@@ -173,4 +165,4 @@ function SearchScreen() {
     )
 }
 
-export default SearchScreen
+export default VerificationScreen
