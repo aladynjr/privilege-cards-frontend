@@ -150,7 +150,7 @@ console.log(copyAlert)
                 {showCard && <Modal
                     fullscreen={true}
                     onClick={() => { setShowCard(false) }}
-                    titletext=""
+                    titletext="" 
                     titlecolor='whitesmoke'
                     bodytext={
                         <div>

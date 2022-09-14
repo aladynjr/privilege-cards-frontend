@@ -7,7 +7,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import LoginScreen from './screens/loginscreen';
 import HomeScreen from './screens/homescreen';
 import Navbar from './components/navbar';
-
+import DashboardScreen from './screens/dashboardscreen';
 import SearchScreen from './screens/searchscreen';
 
 function App() {
@@ -23,6 +23,7 @@ function App() {
 
           <Route exact path="/Verify" element={<SearchScreen />} />
 
+          <Route exact path="/add" element={<DashboardScreen />} />
 
         </Routes>
       </div>
