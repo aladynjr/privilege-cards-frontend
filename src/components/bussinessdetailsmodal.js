@@ -19,6 +19,12 @@ import { MdCheck } from 'react-icons/md';
 import Snackbar from '@mui/material/Snackbar';
 import Skeleton from '@mui/material/Skeleton';
 import { AiFillCloseCircle } from 'react-icons/ai';
+
+import { RiInstagramFill } from 'react-icons/ri'
+import { MdEmail } from 'react-icons/md'
+import { IoPlanet } from 'react-icons/io5'
+import { FaFacebookSquare } from 'react-icons/fa'
+import { IoLocationSharp } from 'react-icons/io5'
 function BussinessDetailsModal({ selectedBussiness, setBussinessDetailsModal, cardAvailable, setShowCard, favouriteBussinesses, AddFavouriteBussiness, userID, DeleteFavouriteBussiness, favButtonLoading, setJoinModal,showCard,setCardID }) {
     var coverImages = selectedBussiness?.bussiness_cover_image_urls?.map((image) => {
         return {
@@ -129,7 +135,11 @@ const [cardLoading, setCardLoading] = useState(false);
                             <p className='bussinessdetailstext'>{selectedBussiness?.bussiness_tradinghours}</p>
 
                             <Divider> <h3 className="front__text-header"><RiCustomerService2Fill style={{ marginBottom: '-5px', marginRight: '7px', opacity: '0.8' }} />Contact</h3></Divider>
-                            <a className='bussinessdetailstext' href={"tel:" + selectedBussiness?.bussiness_phonenumber}> <p><MdPhoneInTalk style={{ marginBottom: '-5px' }} />{selectedBussiness?.bussiness_phonenumber} </p></a>
+                            {selectedBussiness?.bussiness_phonenumber &&<a className='bussinessdetailstext' href={"tel:" + selectedBussiness?.bussiness_phonenumber}> <p><MdPhoneInTalk style={{ marginBottom: '-5px' }} />{selectedBussiness?.bussiness_phonenumber} </p></a>}
+                            {selectedBussiness?.bussiness_email && <a className='bussinessdetailstext' href={selectedBussiness?.bussiness_email} >  <p>  <MdEmail />  Email </p></a>}
+                            {selectedBussiness?.bussiness_instagram && <a className='bussinessdetailstext' href={selectedBussiness?.bussiness_instagram} >  <p> <RiInstagramFill />  Instagram Page </p></a>}
+                            {selectedBussiness?.bussiness_facebook && <a className='bussinessdetailstext' href={selectedBussiness?.bussiness_facebook} >  <p> <FaFacebookSquare />  Facebook Page </p> </a>}
+                            {selectedBussiness?.bussiness_website && <a className='bussinessdetailstext' href={selectedBussiness?.bussiness_website} >   <p> <IoPlanet />  Website </p> </a>}
 
                         </div>
                         <div style={{ marginBottom: '200px' }} ></div>

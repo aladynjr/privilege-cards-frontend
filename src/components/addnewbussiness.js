@@ -5,38 +5,25 @@ import FilledInput from '@mui/material/FilledInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import Divider from '@mui/material/Divider';
 import Snackbar from '@mui/material/Snackbar';
-
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  listAll,
-  list,
-} from "firebase/storage";
+import { RiInstagramFill } from 'react-icons/ri'
+import { MdEmail } from 'react-icons/md'
+import { ref, uploadBytes, getDownloadURL, listAll, list, } from "firebase/storage";
+import { IoPlanet } from 'react-icons/io5'
 import { storage } from "../firebase-config";
-
-
+import { FaFacebookSquare } from 'react-icons/fa'
 import { SiAddthis } from 'react-icons/si'
 import { GrMapLocation } from 'react-icons/gr'
 import { RiFlag2Fill } from 'react-icons/ri'
-
 import { IoLocationSharp } from 'react-icons/io5'
-
 import { MdOutlineFoodBank } from 'react-icons/md'
-
 import { TbShoppingCartDiscount } from 'react-icons/tb'
-
 import { BiDetail } from 'react-icons/bi'
-
 import { AiFillPhone } from 'react-icons/ai'
-
 import { BsFillMoonFill } from 'react-icons/bs'
-
 import { SiGooglestreetview } from 'react-icons/si'
-
 import { FaCity } from 'react-icons/fa'
-
 import LoadingButton from '@mui/lab/LoadingButton';
+import { bussinessSchema } from '../validations/bussinessvalidation';
 
 function AddNewBussiness({ bussinesses, setBussinesses }) {
 
@@ -51,8 +38,45 @@ function AddNewBussiness({ bussinesses, setBussinesses }) {
   const [bussiness_locationdetails, setBussinessLocationDetails] = useState('');
   const [bussiness_tradinghours, setBussinessTradingHours] = useState('');
   const [bussiness_directions_url, setBussinessDirectionsUrl] = useState('');
+  const [bussiness_instagram, setBussinessInstagram] = useState('');
+  const [bussiness_website, setBussinessWebsite] = useState('');
+  const [bussiness_facebook, setBussinessFacebook] = useState('');
+  const [bussiness_email, setBussinessEmail] = useState('');
 
   const [uploadLoading, setUploadLoading] = useState(false);
+
+  const [validationError, setValidationError] = useState(null);
+
+  function ValidateData(){
+    setValidationError(null);
+    let data = {
+      bussiness_name,
+      bussiness_city,
+      bussiness_area,
+      bussiness_discount,
+      bussiness_cuisine,
+      bussiness_description,
+      bussiness_discountdetails,
+      bussiness_phonenumber,
+      bussiness_locationdetails,
+      bussiness_tradinghours,
+      bussiness_cover_image_urls : selectedImages,
+      bussiness_profile_image_url : profileImageUpload,
+      bussiness_directions_url,
+    }
+
+    bussinessSchema.validate(data).then((valid) => {
+      console.log('valid')
+    }).catch((err) => {
+      console.log('err', err.errors[0])
+      setValidationError(err.errors[0])
+     
+    })
+    return (validationError?.length >0);
+  }
+
+
+
   const AddBussiness = async () => {
     if (!bussiness_cover_image_urls || !bussiness_profile_image_url) return;
 
@@ -70,7 +94,11 @@ function AddNewBussiness({ bussinesses, setBussinesses }) {
         bussiness_tradinghours,
         bussiness_cover_image_urls,
         bussiness_profile_image_url,
-        bussiness_directions_url
+        bussiness_directions_url,
+        bussiness_instagram,
+        bussiness_website,
+        bussiness_facebook,
+        bussiness_email
 
       };
       const response = await fetch("https://privilege-cards-backend.fly.dev/api/bussiness", {
@@ -177,22 +205,28 @@ function AddNewBussiness({ bussinesses, setBussinesses }) {
 
       <div className="AddBussinessContainer">
         <div className="AddBussinessInputs">
-          <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Bussiness Name" InputProps={{ startAdornment: (<InputAdornment position="start"> <RiFlag2Fill /> </InputAdornment>), }} value={bussiness_name} onChange={(e) => setBussinessName(e.target.value)} />
-          <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Bussiness Description : Why Should People Visit You? " multiline rows={4} value={bussiness_description} onChange={(e) => setBussinessDescription(e.target.value)} />
-          <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Discount Number (e.g. 25 ) " InputProps={{ startAdornment: (<InputAdornment position="start" ><TbShoppingCartDiscount /> </InputAdornment>), endAdornment: <InputAdornment position="end">%</InputAdornment> }} style={{ maxWidth: '200px' }} value={bussiness_discount} onChange={(e) => setBussinessDiscount(e.target.value)} />
-          <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Discount Details : What Do you Exactly Offer ?" multiline rows={4} value={bussiness_discountdetails} onChange={(e) => setBussinessDiscountDetails(e.target.value)} />
-          <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="City (e.i. Larnaca City)" InputProps={{ startAdornment: (<InputAdornment position="start"> <FaCity /> </InputAdornment>), }} value={bussiness_city} onChange={(e) => setBussinessCity(e.target.value)} />
-          <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Area (e.i City Center)" InputProps={{ startAdornment: (<InputAdornment position="start"> <IoLocationSharp /> </InputAdornment>), }} value={bussiness_area} onChange={(e) => setBussinessArea(e.target.value)} />
-          <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Location Details : Full Adresse" multiline rows={4} value={bussiness_locationdetails} onChange={(e) => setBussinessLocationDetails(e.target.value)} />
-          <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Cuisine/Category (e.i Asian, Steak)" InputProps={{ startAdornment: (<InputAdornment position="start"> <MdOutlineFoodBank /> </InputAdornment>), }} value={bussiness_cuisine} onChange={(e) => setBussinessCuisine(e.target.value)} />
-          <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Phone Number" InputProps={{ startAdornment: (<InputAdornment position="start"> <AiFillPhone /> </InputAdornment>), }} value={bussiness_phonenumber} onChange={(e) => setBussinessPhoneNumber(e.target.value)} />
-          <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Trading Hours Details (e.i Open: Daily 11:00 am - 5:00 pm)" value={bussiness_tradinghours} InputProps={{ startAdornment: (<InputAdornment position="start"> <BsFillMoonFill /> </InputAdornment>), }} onChange={(e) => setBussinessTradingHours(e.target.value)} />
-          <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Google Maps Directions URL" value={bussiness_directions_url} InputProps={{ startAdornment: (<InputAdornment position="start"> <SiGooglestreetview /> </InputAdornment>), }} onChange={(e) => setBussinessDirectionsUrl(e.target.value)} />
+          <TextField error={validationError?.includes('Bussiness Name')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Bussiness Name" InputProps={{ startAdornment: (<InputAdornment position="start"> <RiFlag2Fill /> </InputAdornment>), }} value={bussiness_name} onChange={(e) => setBussinessName(e.target.value)} />
+          <TextField error={validationError?.includes('Bussiness Description')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Bussiness Description : Talk About Your Bussiness " multiline rows={4} value={bussiness_description} onChange={(e) => setBussinessDescription(e.target.value)} />
+          <TextField error={validationError?.includes('Discount Amount')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Discount Number (e.g. 25 ) " InputProps={{ startAdornment: (<InputAdornment position="start" ><TbShoppingCartDiscount /> </InputAdornment>), endAdornment: <InputAdornment position="end">%</InputAdornment> }} style={{ maxWidth: '200px' }} value={bussiness_discount} onChange={(e) => setBussinessDiscount(e.target.value)} />
+          <TextField error={validationError?.includes('Discount Details')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Discount Details : What Do you Exactly Offer ?" multiline rows={4} value={bussiness_discountdetails} onChange={(e) => setBussinessDiscountDetails(e.target.value)} />
+          <TextField error={validationError?.includes('City')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="City (e.i. Larnaca City)" InputProps={{ startAdornment: (<InputAdornment position="start"> <FaCity /> </InputAdornment>), }} value={bussiness_city} onChange={(e) => setBussinessCity(e.target.value)} />
+          <TextField error={validationError?.includes('Area')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Area (e.i City Center)" InputProps={{ startAdornment: (<InputAdornment position="start"> <IoLocationSharp /> </InputAdornment>), }} value={bussiness_area} onChange={(e) => setBussinessArea(e.target.value)} />
+          <TextField error={validationError?.includes('Location Details')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Location Details : Full Adresse" multiline rows={4} value={bussiness_locationdetails} onChange={(e) => setBussinessLocationDetails(e.target.value)} />
+          <TextField error={validationError?.includes('Cuisine')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Cuisine/Category (e.i Asian, Steak)" InputProps={{ startAdornment: (<InputAdornment position="start"> <MdOutlineFoodBank /> </InputAdornment>), }} value={bussiness_cuisine} onChange={(e) => setBussinessCuisine(e.target.value)} />
+          <TextField error={validationError?.includes('Trading Hours')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Trading Hours Details (e.i Open: Daily 11:00 am - 5:00 pm)" value={bussiness_tradinghours} InputProps={{ startAdornment: (<InputAdornment position="start"> <BsFillMoonFill /> </InputAdornment>), }} onChange={(e) => setBussinessTradingHours(e.target.value)} />
+          <TextField error={validationError?.includes('Google Maps')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Google Maps Directions URL" value={bussiness_directions_url} InputProps={{ startAdornment: (<InputAdornment position="start"> <SiGooglestreetview /> </InputAdornment>), }} onChange={(e) => setBussinessDirectionsUrl(e.target.value)} />
+
+          <TextField error={validationError?.includes('Phone Number')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Phone Number" InputProps={{ startAdornment: (<InputAdornment position="start"> <AiFillPhone /> </InputAdornment>), }} value={bussiness_phonenumber} onChange={(e) => setBussinessPhoneNumber(e.target.value)} />
+          <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Email" InputProps={{ startAdornment: (<InputAdornment position="start"> <MdEmail /> </InputAdornment>), }} value={bussiness_email} onChange={(e) => setBussinessEmail(e.target.value)} />
+          <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Instagram Page" InputProps={{ startAdornment: (<InputAdornment position="start"> <RiInstagramFill /> </InputAdornment>), }} value={bussiness_instagram} onChange={(e) => setBussinessInstagram(e.target.value)} />
+          <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Facebook Page" InputProps={{ startAdornment: (<InputAdornment position="start"> <FaFacebookSquare /> </InputAdornment>), }} value={bussiness_facebook} onChange={(e) => setBussinessFacebook(e.target.value)} />
+          <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Website Link" InputProps={{ startAdornment: (<InputAdornment position="start"> <IoPlanet /> </InputAdornment>), }} value={bussiness_website} onChange={(e) => setBussinessWebsite(e.target.value)} />
+
           <Divider style={{ backgorund: 'grey', marginBlock: '20px', width: '70%' }} />
 
           <div className="uploadPhotos">
             <label>
-              + Add Multiple <b> Cover </b> Images
+              + Add Multiple <b> Cover </b> Images *
               <br />
               <span>up to 10 images</span>
               <input
@@ -225,8 +259,8 @@ function AddNewBussiness({ bussinesses, setBussinesses }) {
 
           <div className="uploadPhotos">
             <label>
-              {!profileImageUpload && <div>  + Add One <b> Profile </b> Image</div>}
-              {profileImageUpload && <div>  Change <b> Profile </b> Image</div>}
+              {!profileImageUpload && <div>  + Add One <b> Profile </b> Image *</div>}
+              {profileImageUpload && <div>  Change <b> Profile </b> Image *</div>}
               <br />
               <span>only 1 image</span>
               <input
@@ -256,16 +290,25 @@ function AddNewBussiness({ bussinesses, setBussinesses }) {
           </div>}
           <Divider style={{ backgorund: 'grey', marginBlock: '20px', width: '70%' }} />
 
+          {validationError && <div className="validationErrors">
+                 
+                  <div className="validationError">
+                    {validationError}
+                  </div>
+                
+              
+
+          </div>}
         </div>
         <LoadingButton
           size='large'
-          onClick={() => { setUploadLoading(true); UploadProfilePhoto(); UploadCoverPhoto(); }}
+          onClick={() => {console.log(ValidateData());/* setUploadLoading(true); UploadProfilePhoto(); UploadCoverPhoto();*/ }}
           endIcon={<SiAddthis />}
           loading={uploadLoading}
           loadingPosition="end"
           variant="contained"
           color="success"
-          style={{ fontSize: '20px', fontFamily: 'Crimson Pro' }}
+          style={{ fontSize: '20px', fontFamily: 'Crimson Pro', marginBottom: '100px' }}
         >
           Add Bussiness To Website
         </LoadingButton>
@@ -277,9 +320,9 @@ function AddNewBussiness({ bussinesses, setBussinesses }) {
       <Snackbar
         open={snackBarOpen}
         autoHideDuration={6000}
-        onClose={()=>{setSnackBarOpen(false)}}
+        onClose={() => { setSnackBarOpen(false) }}
         message={snackBarMessage}
-       
+
       />
 
     </div>
