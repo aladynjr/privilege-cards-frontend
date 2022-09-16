@@ -19,9 +19,9 @@ import WaveBG from '../assets/imgs/wavebg.svg';
 
 import copy from 'copy-to-clipboard';
 
+import {AiFillDelete} from 'react-icons/ai';
 
-
-function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favouriteBussinesses, setFavouriteBussinesses, userID, userName, cardAvailable, loggedInButtons = false, setJoinModal }) {
+function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favouriteBussinesses, setFavouriteBussinesses, userID, userName, cardAvailable, loggedInButtons = false, setJoinModal, showDeleteButton=false }) {
 
 
     const getBussinesses = async () => {
@@ -99,7 +99,26 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
 console.log(cardID)
 
 const [copyAlert, setCopyAlert] = useState(false)
-console.log(copyAlert)
+
+const [deleteBussinessLoading, setDeleteBussinessLoading] = useState(false) 
+
+const DeleteBussiness = async id => {
+    setDeleteBussinessLoading(true)
+    try {
+        const deleteBussiness = await fetch(`http://localhost:8080/api/bussiness/${id}`, {
+            method: "DELETE"
+        });
+
+        setBussinesses(bussinesses.filter(bussiness => bussiness.bussiness_id !== id));
+        setDeleteBussinessLoading(false)
+    } catch (err) {
+        console.error(err.message);
+        setDeleteBussinessLoading(false)
+    }
+};
+
+
+
     return (
         <div>
 
@@ -118,9 +137,9 @@ console.log(copyAlert)
 
                     return (
                         <div key={i}>
+                            {showDeleteButton && <LoadingButton loading={deleteBussinessLoading} style={{marginBottom:'-40px', marginTop:'40px', zIndex:'100'}} endIcon={<AiFillDelete />} variant="contained" color="error" onClick={()=>{DeleteBussiness(bussiness?.bussiness_id)}} >DELETE</LoadingButton>}
 
                             <BussinessCard bussiness={bussiness} setSelectedBussiness={setSelectedBussiness} setBussinessDetailsModal={setBussinessDetailsModal}  />
-
 
                         </div>
                     )

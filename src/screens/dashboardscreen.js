@@ -9,7 +9,7 @@ const [bussinesses, setBussinesses] = useState([])
 
 <AddNewBussiness bussinesses={bussinesses} setBussinesses={setBussinesses} />
 
-<BussinessesList bussinesses={bussinesses} setBussinesses={setBussinesses} />
+<BussinessesList bussinesses={bussinesses} setBussinesses={setBussinesses} showDeleteButton={true} />
 
     </div>
   )

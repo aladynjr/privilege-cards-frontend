@@ -14,7 +14,7 @@ export const bussinessSchema = yup.object().shape({
     bussiness_tradinghours: yup.string().required('Trading Hours are required*'),
     bussiness_cover_image_urls: yup.array().required('Cover Images Are required*').min(1,'Cover Images Are required*'),
     bussiness_profile_image_url: yup.string().nullable().required('Profile Image is required*'),
-    bussiness_directions_url: yup.string().required('Google Maps Directions URL is required*'),
+    bussiness_directions_url: yup.string()
 });
 
 

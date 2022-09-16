@@ -111,7 +111,9 @@ function AddNewBussiness({ bussinesses, setBussinesses }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       });
-      setBussinesses([body, ...bussinesses]);
+
+      const jsonData = await response.json();
+      setBussinesses([...jsonData, ...bussinesses  ]);
       console.log('success !!')
       setUploadLoading(false)
       setSnackBarMessage('Bussiness Added Successfully')
@@ -219,7 +221,7 @@ function AddNewBussiness({ bussinesses, setBussinesses }) {
           <TextField error={validationError?.includes('Location Details')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Location Details : Full Adresse" multiline rows={4} value={bussiness_locationdetails} onChange={(e) => setBussinessLocationDetails(e.target.value)} />
           <TextField error={validationError?.includes('Cuisine')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Cuisine/Category (e.i Asian, Steak)" InputProps={{ startAdornment: (<InputAdornment position="start"> <MdOutlineFoodBank /> </InputAdornment>), }} value={bussiness_cuisine} onChange={(e) => setBussinessCuisine(e.target.value)} />
           <TextField error={validationError?.includes('Trading Hours')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Trading Hours Details (e.i Open: Daily 11:00 am - 5:00 pm)" value={bussiness_tradinghours} InputProps={{ startAdornment: (<InputAdornment position="start"> <BsFillMoonFill /> </InputAdornment>), }} onChange={(e) => setBussinessTradingHours(e.target.value)} />
-          <TextField error={validationError?.includes('Google Maps')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Google Maps Directions URL" value={bussiness_directions_url} InputProps={{ startAdornment: (<InputAdornment position="start"> <SiGooglestreetview /> </InputAdornment>), }} onChange={(e) => setBussinessDirectionsUrl(e.target.value)} />
+          <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Google Maps Directions URL" value={bussiness_directions_url} InputProps={{ startAdornment: (<InputAdornment position="start"> <SiGooglestreetview /> </InputAdornment>), }} onChange={(e) => setBussinessDirectionsUrl(e.target.value)} />
 
           <TextField error={validationError?.includes('Phone Number')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Phone Number" InputProps={{ startAdornment: (<InputAdornment position="start"> <AiFillPhone /> </InputAdornment>), }} value={bussiness_phonenumber} onChange={(e) => setBussinessPhoneNumber(e.target.value)} />
           <TextField className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Email" InputProps={{ startAdornment: (<InputAdornment position="start"> <MdEmail /> </InputAdornment>), }} value={bussiness_email} onChange={(e) => setBussinessEmail(e.target.value)} />
