@@ -24,11 +24,14 @@ import { SiGooglestreetview } from 'react-icons/si'
 import { FaCity } from 'react-icons/fa'
 import LoadingButton from '@mui/lab/LoadingButton';
 import { bussinessSchema } from '../validations/bussinessvalidation';
-import {AiFillEdit} from 'react-icons/ai'
+import { AiFillEdit } from 'react-icons/ai'
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 
-function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness}) {
+function UpdateBussiness({ bussinesses, setBussinesses, selectedEditBussiness }) {
+
 
   const [bussiness_name, setBussinessName] = useState('');
   const [bussiness_city, setBussinessCity] = useState('');
@@ -45,12 +48,44 @@ function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness})
   const [bussiness_website, setBussinessWebsite] = useState('');
   const [bussiness_facebook, setBussinessFacebook] = useState('');
   const [bussiness_email, setBussinessEmail] = useState('');
+  const [bussiness_approved, setBussinessApproved] = useState(false);
+  const [bussiness_cover_image_urls, setCoverImageUrls] = useState([]);
+  const [bussiness_profile_image_url, setProfileImageUrl] = useState(null);
+
+  //show selected bussiness data in in form fields
+  const [numberOfInitialCoverImages, setNumberOfInitialCoverImages] = useState(0);
+  useEffect(() => {
+    if (!selectedEditBussiness) return;
+
+    setBussinessName(selectedEditBussiness.bussiness_name)
+    setBussinessCity(selectedEditBussiness.bussiness_city)
+    setBussinessArea(selectedEditBussiness.bussiness_area)
+    setBussinessDiscount(selectedEditBussiness.bussiness_discount)
+    setBussinessCuisine(selectedEditBussiness.bussiness_cuisine)
+    setBussinessDescription(selectedEditBussiness.bussiness_description)
+    setBussinessDiscountDetails(selectedEditBussiness.bussiness_discountdetails)
+    setBussinessPhoneNumber(selectedEditBussiness.bussiness_phonenumber)
+    setBussinessLocationDetails(selectedEditBussiness.bussiness_locationdetails)
+    setBussinessTradingHours(selectedEditBussiness.bussiness_tradinghours)
+    setBussinessDirectionsUrl(selectedEditBussiness.bussiness_directions_url)
+    setBussinessInstagram(selectedEditBussiness.bussiness_instagram)
+    setBussinessWebsite(selectedEditBussiness.bussiness_website)
+    setBussinessFacebook(selectedEditBussiness.bussiness_facebook)
+    setBussinessEmail(selectedEditBussiness.bussiness_email)
+
+    //setSubmittedCoverImagesForShow(selectedEditBussiness.bussiness_cover_image_urls)
+    setProfileImageUrl(selectedEditBussiness.bussiness_profile_image_url)
+    setCoverImageUrls(selectedEditBussiness.bussiness_cover_image_urls)
+    setBussinessApproved(selectedEditBussiness.bussiness_approved)
+    setNumberOfInitialCoverImages(selectedEditBussiness.bussiness_cover_image_urls?.length)
+  }, [selectedEditBussiness])
+
+
 
   const [uploadLoading, setUploadLoading] = useState(false);
-
   const [validationError, setValidationError] = useState(null);
 
-  const ValidateData= async()=>{
+  const ValidateData = async () => {
     setValidationError(null);
     let data = {
       bussiness_name,
@@ -63,31 +98,126 @@ function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness})
       bussiness_phonenumber,
       bussiness_locationdetails,
       bussiness_tradinghours,
-      bussiness_cover_image_urls : selectedImages,
-      bussiness_profile_image_url : profileImageUpload || bussiness_profile_image_url  ,
+      bussiness_cover_image_urls:  bussiness_cover_image_urls ,
+      bussiness_profile_image_url: submittedProfileImageForUpload || bussiness_profile_image_url,
       bussiness_directions_url,
     }
 
+    //Validate before allowing user to submit (upload and update)
     bussinessSchema.validate(data).then((valid) => {
       console.log('valid');
       setValidationError(null);
-      setUploadLoading(true); 
+      setUploadLoading(true);
+      //if validation passes, upload images 
+      UploadProfilePhoto();
+      UploadCoverPhotos();
 
-       UploadProfilePhoto(); 
-       UploadCoverPhoto();
     }).catch((err) => {
       console.log('err', err.errors[0])
       setValidationError(err.errors[0])
-     
+
     })
     return (!validationError?.length);
   }
 
 
+  //Submit  cover photos files 
+  const [submittedCoverImagesForShow, setSubmittedCoverImagesForShow] = useState([]);
+  const [submittedCoverImagesForUpload, setSubmittedCoverImagesForUpload] = useState([]);
 
-  const AddBussiness = async () => {
-    if (!bussiness_cover_image_urls || !bussiness_profile_image_url) return;
+  const onSelectCoverImagesFiles = (event) => {
+    const selectedFiles = event.target.files;
+    const selectedFilesArray = Array.from(selectedFiles);
 
+    setSubmittedCoverImagesForUpload(selectedFilesArray)
+
+    const imagesArray = selectedFilesArray.map((file) => {
+      return URL.createObjectURL(file);
+    });
+
+    setSubmittedCoverImagesForShow((previousImages) => previousImages.concat(imagesArray));
+
+    // FOR BUG IN CHROME
+    event.target.value = "";
+  };
+
+
+  //Upload Profile Photo
+  const [submittedProfileImageForUpload, setSubmittedProfileImageForUpload] = useState(null);
+  const UploadProfilePhoto = () => {
+    if (submittedProfileImageForUpload == null) { setProfileUploadFinished(true); return; }
+
+    const imageRef = ref(storage, `images/bussiness_profile_photo/${submittedProfileImageForUpload.name + bussiness_name}`);
+    uploadBytes(imageRef, submittedProfileImageForUpload).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+        setProfileImageUrl(url);
+        setProfileUploadFinished(true);
+      });
+    });
+  };
+
+
+
+  //Upload Cover Photos
+  const UploadCoverPhotos = () => {
+    if (submittedCoverImagesForUpload?.length < 1) { UpdateSameBussiness(); return };
+
+    setUploadLoading(true)
+    submittedCoverImagesForUpload.map((image) => {
+      const imageRef = ref(storage, `images/bussiness_cover_photo/${image.name + bussiness_name}`);
+      uploadBytes(imageRef, image).then((snapshot) => {
+        getDownloadURL(snapshot.ref).then((url) => {
+          setCoverImageUrls(bussiness_cover_image_urls => [...bussiness_cover_image_urls, url]);
+        });
+      });
+    })
+
+
+  };
+
+  function deleteSubmittedCoverPhoto(image, submittedCoverImagesForShow) {
+    setSubmittedCoverImagesForShow(submittedCoverImagesForShow.filter((e) => e !== image));
+    URL.revokeObjectURL(image);
+  }
+  console.log({ submittedCoverImagesForUpload })
+
+  const [snackBarMessage, setSnackBarMessage] = useState(null);
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
+
+  //check if upload finished so we update bussiness 
+
+  const [coverUploadFinished, setCoverUploadFinished] = useState(false);
+  const [profileUploadFinished, setProfileUploadFinished] = useState(false);
+
+  //profile photos directly from upload function
+
+
+  //cover photos
+  useEffect(() => {
+    if ((numberOfInitialCoverImages + submittedCoverImagesForUpload?.length) == bussiness_cover_image_urls.length) {
+      setCoverUploadFinished(true);
+    }
+    if ((numberOfInitialCoverImages + submittedCoverImagesForUpload?.length) !== bussiness_cover_image_urls.length) {
+      setCoverUploadFinished(false);
+    }
+  },[bussiness_cover_image_urls,submittedCoverImagesForUpload])
+
+
+  console.log({ profileUploadFinished })
+  console.log({ coverUploadFinished })
+  console.log({ numberOfInitialCoverImages })
+
+  //update bussiness
+  useEffect(() => {
+    if (coverUploadFinished && profileUploadFinished) {
+      UpdateSameBussiness();
+    }
+  }, [coverUploadFinished, profileUploadFinished])
+
+
+  const UpdateSameBussiness = async () => {
+    if (!bussiness_cover_image_urls || !bussiness_profile_image_url) {console.log('upading bussinesss canceled !!'); return};
+console.log('START updating bussinesss !!');
     try {
       const body = {
         bussiness_name,
@@ -106,192 +236,87 @@ function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness})
         bussiness_instagram,
         bussiness_website,
         bussiness_facebook,
-        bussiness_email
+        bussiness_email,
+        bussiness_approved
 
       };
-      const response = await fetch(process.env.REACT_APP_HOST+"/api/bussiness", {
-        method: "POST",
+      const response = await fetch(process.env.REACT_APP_HOST + "/api/bussiness/" + selectedEditBussiness?.bussiness_id, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       });
 
       const jsonData = await response.json();
-      setBussinesses([...jsonData, ...bussinesses  ]);
+      //setBussinesses([...jsonData, ...bussinesses  ]);
       console.log('success !!')
       setUploadLoading(false)
-      setSnackBarMessage('Bussiness Added Successfully')
+      setSnackBarMessage('Bussiness Updated  Successfully')
       setSnackBarOpen(true)
       // window.location = "/";
     } catch (err) {
       console.error(err.message);
       setUploadLoading(false)
-      setSnackBarMessage('Error While Adding Bussiness')
+      setSnackBarMessage('Error While Updating Bussiness')
       setSnackBarOpen(true)
     }
 
   };
 
-  const [coverImageUpload, setCoverImageUpload] = useState([]);
-  const [profileImageUpload, setProfileImageUpload] = useState(null);
+  const handleApprovalSwitch = (event) => {
+    setBussinessApproved(event.target.checked);
+  };
 
-  const [bussiness_cover_image_urls, setCoverImageUrl] = useState([]);
-  const [bussiness_profile_image_url, setProfileImageUrl] = useState(null);
+  console.log({ bussiness_cover_image_urls })
 
-  const UploadCoverPhoto = () => {
-    if (coverImageUpload?.length < 1) return;
 
-    setUploadLoading(true)
+//delete an uploaded cover photo
+const deleteUploadedCoverPhoto = (image) => {
+  setCoverImageUrls(bussiness_cover_image_urls => bussiness_cover_image_urls.filter((e) => e !== image));
+  //UpdateBussinessField(bussiness_cover_image_urls, 'bussiness_cover_image_urls', selectedEditBussiness?.bussiness_id)
 
-    coverImageUpload.map((image) => {
-      const imageRef = ref(storage, `images/bussiness_cover_photo/${image.name + bussiness_name}`);
-      uploadBytes(imageRef, image).then((snapshot) => {
-        getDownloadURL(snapshot.ref).then((url) => {
-          setCoverImageUrl(bussiness_cover_image_urls => [...bussiness_cover_image_urls, url]);
-        });
+}
+
+console.log({bussiness_cover_image_urls})
+
+  //update bussiness 
+  const UpdateBussinessField = async (value, column, id) => {
+
+    try {
+      const body = {
+       value,
+       column
+
+      };
+      const response = await fetch(process.env.REACT_APP_HOST + "/api/bussiness/one/" +  id, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
       });
-    })
 
-
-  };
-
-  const UploadProfilePhoto = () => {
-    if (profileImageUpload == null) return;
-
-
-    const imageRef = ref(storage, `images/bussiness_profile_photo/${profileImageUpload.name + bussiness_name}`);
-    uploadBytes(imageRef, profileImageUpload).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        setProfileImageUrl(url);
-      });
-    });
-
-
-
-  };
-
-  console.log(bussiness_profile_image_url)
-  const coverPhotosListRef = ref(storage, "images/bussiness_cover_photo");
-  const profilePhotosListRef = ref(storage, "images/bussiness_profile_photo");
-
-  const [selectedImages, setSelectedImages] = useState([]);
-
-  const onSelectFile = (event) => {
-    const selectedFiles = event.target.files;
-    const selectedFilesArray = Array.from(selectedFiles);
-
-    setCoverImageUpload(selectedFilesArray)
-
-    const imagesArray = selectedFilesArray.map((file) => {
-      return URL.createObjectURL(file);
-    });
-
-    setSelectedImages((previousImages) => previousImages.concat(imagesArray));
-
-    // FOR BUG IN CHROME
-    event.target.value = "";
-  };
-
-  function deleteHandler(image, selectedImages) {
-    setSelectedImages(selectedImages.filter((e) => e !== image));
-    URL.revokeObjectURL(image);
-  }
-  console.log(coverImageUpload)
-
-
-
-  useEffect(() => {
-    if ((bussiness_cover_image_urls?.length == selectedImages?.length) && bussiness_profile_image_url) {
-        AddBussiness();
-
-      
+      const jsonData = await response.json();
+      setSnackBarMessage('Success')
+      setSnackBarOpen(true)
+      // window.location = "/";
+    } catch (err) {
+      console.error(err.message);
+      setSnackBarMessage('Something Went Wrong')
+      setSnackBarOpen(true)
     }
-  }, [bussiness_cover_image_urls, bussiness_profile_image_url])
 
-
-  const [snackBarMessage, setSnackBarMessage] = useState(null);
-  const [snackBarOpen, setSnackBarOpen] = useState(false);
-
-//update bussiness
-
-useEffect(()=>{
-if(!selectedEditBussiness) return;
-
-setBussinessName(selectedEditBussiness.bussiness_name)
-setBussinessCity(selectedEditBussiness.bussiness_city)
-setBussinessArea(selectedEditBussiness.bussiness_area)
-setBussinessDiscount(selectedEditBussiness.bussiness_discount)
-setBussinessCuisine(selectedEditBussiness.bussiness_cuisine)
-setBussinessDescription(selectedEditBussiness.bussiness_description)
-setBussinessDiscountDetails(selectedEditBussiness.bussiness_discountdetails)
-setBussinessPhoneNumber(selectedEditBussiness.bussiness_phonenumber)
-setBussinessLocationDetails(selectedEditBussiness.bussiness_locationdetails)
-setBussinessTradingHours(selectedEditBussiness.bussiness_tradinghours)
-setBussinessDirectionsUrl(selectedEditBussiness.bussiness_directions_url)
-setBussinessInstagram(selectedEditBussiness.bussiness_instagram)
-setBussinessWebsite(selectedEditBussiness.bussiness_website)
-setBussinessFacebook(selectedEditBussiness.bussiness_facebook)
-setBussinessEmail(selectedEditBussiness.bussiness_email)
-
-setSelectedImages(selectedEditBussiness.bussiness_cover_image_urls)
-setProfileImageUrl(selectedEditBussiness.bussiness_profile_image_url)
-
-},[selectedEditBussiness])
-
-const UpdateBussiness = async () => {
-  if (!bussiness_cover_image_urls || !bussiness_profile_image_url) return;
-
-  try {
-    const body = {
-      bussiness_name,
-      bussiness_city,
-      bussiness_area,
-      bussiness_discount,
-      bussiness_cuisine,
-      bussiness_description,
-      bussiness_discountdetails,
-      bussiness_phonenumber,
-      bussiness_locationdetails,
-      bussiness_tradinghours,
-      bussiness_cover_image_urls,
-      bussiness_profile_image_url,
-      bussiness_directions_url,
-      bussiness_instagram,
-      bussiness_website,
-      bussiness_facebook,
-      bussiness_email
-
-    };
-    const response = await fetch(process.env.REACT_APP_HOST+"/api/bussiness/"+selectedEditBussiness?.bussiness_id, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    });
-
-    const jsonData = await response.json();
-    //setBussinesses([...jsonData, ...bussinesses  ]);
-    console.log('success !!')
-    setUploadLoading(false)
-    setSnackBarMessage('Bussiness Updated  Successfully')
-    setSnackBarOpen(true)
-    // window.location = "/";
-  } catch (err) {
-    console.error(err.message);
-    setUploadLoading(false)
-    setSnackBarMessage('Error While Updating Bussiness')
-    setSnackBarOpen(true)
-  }
-
-};
-
-
-console.log(selectedEditBussiness)
+  };
   return (
     <div>
-       <h1>Add Bussiness</h1>
 
+      <h1>Approve and Update Bussinesses</h1>
 
       <div className="AddBussinessContainer">
         <div className="AddBussinessInputs">
+
+          <FormControlLabel control={<Switch checked={bussiness_approved}
+            onChange={handleApprovalSwitch}
+            inputProps={{ 'aria-label': 'controlled' }} />} label="Approve Bussiness (Publish)" />
+
+
           <TextField error={validationError?.includes('Bussiness Name')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Bussiness Name" InputProps={{ startAdornment: (<InputAdornment position="start"> <RiFlag2Fill /> </InputAdornment>), }} value={bussiness_name} onChange={(e) => setBussinessName(e.target.value)} />
           <TextField error={validationError?.includes('Bussiness Description')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Bussiness Description : Talk About Your Bussiness " multiline rows={4} value={bussiness_description} onChange={(e) => setBussinessDescription(e.target.value)} />
           <TextField error={validationError?.includes('Discount Amount')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Discount Number (e.g. 25 ) " InputProps={{ startAdornment: (<InputAdornment position="start" ><TbShoppingCartDiscount /> </InputAdornment>), endAdornment: <InputAdornment position="end">%</InputAdornment> }} style={{ maxWidth: '200px' }} value={bussiness_discount} onChange={(e) => setBussinessDiscount(e.target.value)} />
@@ -311,6 +336,8 @@ console.log(selectedEditBussiness)
 
           <Divider style={{ backgorund: 'grey', marginBlock: '20px', width: '70%' }} />
 
+
+
           <div className="uploadPhotos">
             <label>
               + Add Multiple <b> Cover </b> Images *
@@ -320,34 +347,52 @@ console.log(selectedEditBussiness)
                 type="file"
                 name="images"
                 multiple
-                onChange={(event) => { onSelectFile(event) }}
-
+                onChange={(event) => { onSelectCoverImagesFiles(event) }}
                 accept="image/png , image/jpeg, image/webp"
               />
             </label>
             <br />
           </div>
-
-          {(selectedImages?.length > 0) && <div style={{ display: 'flex', backgroundColor: 'whitesmoke', padding: '10px', borderRadius: '10px', margin: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <i>submitted cover images </i>
+          {(submittedCoverImagesForShow?.length > 0) && <div style={{ display: 'flex', backgroundColor: 'whitesmoke', padding: '10px', borderRadius: '10px', margin: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-              {selectedImages.map((image, index) => {
+              {submittedCoverImagesForShow.map((image, index) => {
                 return (
                   <div key={image} className="image">
                     <img style={{ borderRadius: '20px' }} src={image} height="120" alt="upload" />
-                    <button style={{ marginTop: '-7px' }} onClick={() => deleteHandler(image, selectedImages)}>
+                    <button style={{ marginTop: '-7px' }} onClick={() => deleteSubmittedCoverPhoto(image, submittedCoverImagesForShow)}>
                       X
                     </button>
                   </div>
                 );
               })}</div>
           </div>}
+          <div>{!(submittedCoverImagesForShow?.length > 0) && <h3 style={{ opacity: '0.5' }} >NONE</h3>}</div>
+
+          <i>uploaded cover images </i>
+          {(bussiness_cover_image_urls?.length > 0) && <div style={{ display: 'flex', backgroundColor: 'whitesmoke', padding: '10px', borderRadius: '10px', margin: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {bussiness_cover_image_urls.map((image, index) => {
+                return (
+                  <div key={image} className="image">
+                    <img style={{ borderRadius: '20px' }} src={image} height="120" alt="upload" />
+                    <button style={{ marginTop: '-7px' }} onClick={() => { deleteUploadedCoverPhoto(image) }}>
+                      X
+                    </button>
+                  </div>
+                );
+              })}</div>
+          </div>}
+          <div>{!(bussiness_cover_image_urls?.length > 0) && <h3 style={{ opacity: '0.5' }} >NONE</h3>}</div>
+
+
 
           <Divider style={{ backgorund: 'grey', marginBlock: '20px', width: '70%' }} />
 
           <div className="uploadPhotos">
             <label>
-              {!profileImageUpload && <div>  + Add One <b> Profile </b> Image *</div>}
-              {profileImageUpload && <div>  Change <b> Profile </b> Image *</div>}
+              {!submittedProfileImageForUpload && <div>  + Add One <b> Profile </b> Image *</div>}
+              {submittedProfileImageForUpload && <div>  Change <b> Profile </b> Image *</div>}
               <br />
               <span>only 1 image</span>
               <input
@@ -355,7 +400,7 @@ console.log(selectedEditBussiness)
                 name="images"
 
                 onChange={(event) => {
-                  setProfileImageUpload(event.target.files[0]);
+                  setSubmittedProfileImageForUpload(event.target.files[0]);
                 }}
 
                 accept="image/png , image/jpeg, image/webp"
@@ -363,12 +408,29 @@ console.log(selectedEditBussiness)
             </label>
             <br />
           </div>
-          {(profileImageUpload || bussiness_profile_image_url )&& <div style={{ display: 'flex', backgroundColor: 'whitesmoke', padding: '10px', borderRadius: '10px', margin: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <i>submitted profile image  </i>
+          {(submittedProfileImageForUpload) && <div style={{ display: 'flex', backgroundColor: 'whitesmoke', padding: '10px', borderRadius: '10px', margin: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
 
 
             <div className="image">
-              <img style={{ borderRadius: '100%' }} src={profileImageUpload ? URL.createObjectURL(profileImageUpload) : bussiness_profile_image_url } height="120" width='120' alt="upload" />
-              {/* <button onClick={() => deleteHandler(image, selectedImages)}>
+              <img style={{ borderRadius: '100%' }} src={URL.createObjectURL(submittedProfileImageForUpload)} height="120" width='120' alt="upload" />
+              {/* <button onClick={() => deleteSubmittedCoverPhoto(image, submittedCoverImagesForShow)}>
+                  X
+                </button> */}
+            </div>
+
+
+          </div>}
+          <div>{!submittedProfileImageForUpload && <h3 style={{ opacity: '0.5' }} >NONE</h3>}</div>
+
+
+          <i>uploaded profile image </i>
+          {(bussiness_profile_image_url) && <div style={{ display: 'flex', backgroundColor: 'whitesmoke', padding: '10px', borderRadius: '10px', margin: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
+
+
+            <div className="image">
+              <img style={{ borderRadius: '100%' }} src={bussiness_profile_image_url} height="120" width='120' alt="upload" />
+              {/* <button onClick={() => deleteSubmittedCoverPhoto(image, submittedCoverImagesForShow)}>
                   X
                 </button> */}
             </div>
@@ -376,28 +438,30 @@ console.log(selectedEditBussiness)
 
           </div>}
           {/* <Divider style={{ backgorund: 'grey', marginBlock: '20px', width: '70%' }} /> */}
+          <div>{!bussiness_profile_image_url && <h3 style={{ opacity: '0.5' }} >NONE</h3>}</div>
 
           {validationError && <div className="validationErrors">
-                 
-                  <div className="validationError">
-                    {validationError}
-                  </div>
+
+            <div className="validationError">
+              {validationError}
+            </div>
           </div>}
         </div>
-       <LoadingButton
+
+
+        <LoadingButton
           size='large'
-          onClick={() => {ValidateData()}}
-          endIcon={<SiAddthis />}
+          onClick={() => { ValidateData() }}
+          endIcon={<AiFillEdit />}
           loading={uploadLoading}
           loadingPosition="end"
           variant="contained"
-          color="success"
-          style={{ fontSize: '20px', fontFamily: 'Crimson Pro', marginBottom: '100px' , marginInline:'10px'}}
+          color="warning"
+          disabled={!selectedEditBussiness}
+          style={{ fontSize: '20px', fontFamily: 'Crimson Pro', marginBottom: '100px', marginInline: '10px' }}
         >
-          Add Bussiness To Website
+          Update Bussiness
         </LoadingButton>
-
-
 
 
       </div>
@@ -415,4 +479,4 @@ console.log(selectedEditBussiness)
   )
 }
 
-export default AddNewBussiness
+export default UpdateBussiness

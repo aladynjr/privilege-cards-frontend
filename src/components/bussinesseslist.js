@@ -4,7 +4,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import Modal from './modal';
 import Snackbar from '@mui/material/Snackbar';
-
+import {AiFillEdit} from 'react-icons/ai'
 
 
 import BussinessDetailsModal from './bussinessdetailsmodal';
@@ -21,12 +21,12 @@ import copy from 'copy-to-clipboard';
 
 import {AiFillDelete} from 'react-icons/ai';
 
-function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favouriteBussinesses, setFavouriteBussinesses, userID, userName, cardAvailable, loggedInButtons = false, setJoinModal, showDeleteButton=false }) {
+function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favouriteBussinesses, setFavouriteBussinesses, userID, userName, cardAvailable, loggedInButtons = false, setJoinModal, showDeleteButton=false, showEditButton= false , setSelectedEditBussiness, showApproved=true}) {
 
 
     const getBussinesses = async () => {
         try {
-            const response = await fetch("https://privilege-cards-backend.fly.dev/api/bussiness");
+            const response = await fetch(process.env.REACT_APP_HOST+"/api/bussiness");
             const jsonData = await response.json();
 
             setBussinesses(jsonData);
@@ -52,7 +52,7 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
                 bussiness_id,
 
             };
-            const response = await fetch("https://privilege-cards-backend.fly.dev/api/app_user_bussiness", {
+            const response = await fetch(process.env.REACT_APP_HOST+"/api/app_user_bussiness", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
@@ -70,7 +70,7 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
     const DeleteFavouriteBussiness = async (app_user_id, bussiness_id) => {
         setFavButtonLoading(true)
         try {
-            const deleteBussiness = await fetch(`https://privilege-cards-backend.fly.dev/api/app_user_bussiness/${app_user_id}/${bussiness_id}`, {
+            const deleteBussiness = await fetch(process.env.REACT_APP_HOST+`/api/app_user_bussiness/${app_user_id}/${bussiness_id}`, {
                 method: "DELETE"
             });
 
@@ -105,7 +105,7 @@ const [deleteBussinessLoading, setDeleteBussinessLoading] = useState(false)
 const DeleteBussiness = async id => {
     setDeleteBussinessLoading(true)
     try {
-        const deleteBussiness = await fetch(`http://localhost:8080/api/bussiness/${id}`, {
+        const deleteBussiness = await fetch(process.env.REACT_APP_HOST+`/api/bussiness/${id}`, {
             method: "DELETE"
         });
 
@@ -130,17 +130,19 @@ const DeleteBussiness = async id => {
         style={{zIndex:'99999'}}
         />
 
-            <h1 style={{ opacity: '0.9' }} >AVAILABLE OFFERS</h1>
-            <div style={{ display: 'flex', justifyContent: 'space-evenly', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-evenly', flexWrap: 'wrap', minHeight:'200px' }}>
                 {(bussinesses?.length > 0) && bussinesses.map((bussiness, i) => {
 
 
                     return (
                         <div key={i}>
+                           {showApproved==bussiness?.bussiness_approved && <div>
                             {showDeleteButton && <LoadingButton loading={deleteBussinessLoading} style={{marginBottom:'-40px', marginTop:'40px', zIndex:'100'}} endIcon={<AiFillDelete />} variant="contained" color="error" onClick={()=>{DeleteBussiness(bussiness?.bussiness_id)}} >DELETE</LoadingButton>}
+                            {showEditButton && <LoadingButton  style={{marginBottom:'-40px', marginTop:'40px', zIndex:'100'}} endIcon={<AiFillEdit />} variant="contained" color="warning" onClick={()=>{setSelectedEditBussiness(bussiness)}} >EDIT</LoadingButton>}
 
                             <BussinessCard bussiness={bussiness} setSelectedBussiness={setSelectedBussiness} setBussinessDetailsModal={setBussinessDetailsModal}  />
 
+                        </div>}
                         </div>
                     )
                 })}

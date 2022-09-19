@@ -14,7 +14,7 @@ function VerificationScreen() {
     const [bussinessesLabel, setBussinessesLabel] = useState([]);
     const getBussinesses = async () => {
         try {
-            const response = await fetch("https://privilege-cards-backend.fly.dev/api/bussiness");
+            const response = await fetch(process.env.REACT_APP_HOST+"/api/bussiness");
             const jsonData = await response.json();
 
             setBussinesses(jsonData);
@@ -45,7 +45,7 @@ function VerificationScreen() {
         setCards([])
 
         try {
-            const response = await fetch(`https://privilege-cards-backend.fly.dev/api/privilege_card/bussiness/${id}`);
+            const response = await fetch(process.env.REACT_APP_HOST+`/api/privilege_card/bussiness/${id}`);
             const jsonData = await response.json();
 
             setCards(jsonData);
@@ -63,7 +63,7 @@ function VerificationScreen() {
         setCard(null)
 
         try {
-            const response = await fetch(`https://privilege-cards-backend.fly.dev/api/privilege_card/${id}`);
+            const response = await fetch(process.env.REACT_APP_HOST+`/api/privilege_card/${id}`);
             const jsonData = await response.json();
 
             setCard(jsonData);

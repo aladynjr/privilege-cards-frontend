@@ -5,7 +5,7 @@ function BussinessesList({bussinesses, setBussinesses}) {
 
     const getBussinesses = async () => {
         try {
-            const response = await fetch("https://privilege-cards-backend.fly.dev/api/bussiness");
+            const response = await fetch(process.env.REACT_APP_HOST+"/api/bussiness");
             const jsonData = await response.json();
 
             setBussinesses(jsonData);
@@ -20,7 +20,7 @@ function BussinessesList({bussinesses, setBussinesses}) {
 
     const DeleteBussiness = async id => {
         try {
-            const deleteBussiness = await fetch(`https://privilege-cards-backend.fly.dev/api/bussiness/${id}`, {
+            const deleteBussiness = await fetch(process.env.REACT_APP_HOST+`/api/bussiness/${id}`, {
                 method: "DELETE"
             });
 

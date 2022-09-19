@@ -52,7 +52,7 @@ console.log(userData)
 
   const getFavouriteBussinesses = async (id) => {
     try {
-      const response = await fetch(`https://privilege-cards-backend.fly.dev/api/app_user_bussiness/${id}`);
+      const response = await fetch(process.env.REACT_APP_HOST+`/api/app_user_bussiness/${id}`);
       const jsonData = await response.json();
       setFavouriteBussinesses(jsonData);
 
@@ -76,7 +76,7 @@ console.log(userData)
       const body = {
         app_user_main_privilege_card,
       };
-      const response = await fetch(`https://privilege-cards-backend.fly.dev/api/app_user/${app_user_id}`, {
+      const response = await fetch(process.env.REACT_APP_HOST+`/api/app_user/${app_user_id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
@@ -120,6 +120,8 @@ console.log(userData)
         </AccordionDetails>
       </Accordion>
       }
+
+            <h1 style={{ opacity: '0.9' }} >AVAILABLE OFFERS</h1>
 
       <BussinessesList
         bussinesses={bussinesses}

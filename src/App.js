@@ -7,7 +7,9 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import LoginScreen from './screens/loginscreen';
 import HomeScreen from './screens/homescreen';
 import Navbar from './components/navbar';
-import DashboardScreen from './screens/dashboardscreen';
+import AddScreen from './screens/addscreen';
+import ApproveScreen from './screens/approvescreen';
+
 import VerificationScreen from './screens/verificationscreen';
 
 function App() {
@@ -23,7 +25,8 @@ function App() {
 
           <Route exact path="/Verify" element={<VerificationScreen />} />
 
-          <Route exact path="/add" element={<DashboardScreen />} />
+          <Route exact path="/add" element={<AddScreen />} />
+          <Route exact path="/approve" element={<ApproveScreen />} />
 
         </Routes>
       </div>

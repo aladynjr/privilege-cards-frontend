@@ -103,6 +103,7 @@ const [showVerification, setShowVerification] = useState(false)
 
 
       />}
+            <h1 style={{ opacity: '0.9' }} >AVAILABLE OFFERS</h1>
 
       <BussinessesList 
        bussinesses={bussinesses}
@@ -120,6 +121,7 @@ const [showVerification, setShowVerification] = useState(false)
   {!showVerification && <a style={{fontSize:'25px', color:'coral', textDecoration:'underline', cursor:'pointer'}} onClick={()=>{ setShowVerification(true)}} >Verify Card </a>}
 
   {showVerification && <div className="animate__animated animate__fadeInDown"> <VerificationScreen  /></div>}
+  
   </div>
        
     </div>
