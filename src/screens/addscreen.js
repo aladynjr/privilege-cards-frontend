@@ -12,7 +12,7 @@ const [selectedEditBussiness, setSelectedEditBussiness] = useState(null)
 
 <AddNewBussiness bussinesses={bussinesses} setBussinesses={setBussinesses} selectedEditBussiness={selectedEditBussiness} />
 
-<BussinessesList bussinesses={bussinesses} setBussinesses={setBussinesses} showDeleteButton={true} showEditButton={true} setSelectedEditBussiness={setSelectedEditBussiness}  />
+<BussinessesList bussinesses={bussinesses} setBussinesses={setBussinesses} showDeleteButton={false} showEditButton={false} setSelectedEditBussiness={setSelectedEditBussiness}  />
 
     </div>
   )

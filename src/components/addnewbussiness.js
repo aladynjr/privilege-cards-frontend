@@ -237,51 +237,7 @@ setProfileImageUrl(selectedEditBussiness.bussiness_profile_image_url)
 
 },[selectedEditBussiness])
 
-const UpdateBussiness = async () => {
-  if (!bussiness_cover_image_urls || !bussiness_profile_image_url) return;
 
-  try {
-    const body = {
-      bussiness_name,
-      bussiness_city,
-      bussiness_area,
-      bussiness_discount,
-      bussiness_cuisine,
-      bussiness_description,
-      bussiness_discountdetails,
-      bussiness_phonenumber,
-      bussiness_locationdetails,
-      bussiness_tradinghours,
-      bussiness_cover_image_urls,
-      bussiness_profile_image_url,
-      bussiness_directions_url,
-      bussiness_instagram,
-      bussiness_website,
-      bussiness_facebook,
-      bussiness_email
-
-    };
-    const response = await fetch(process.env.REACT_APP_HOST+"/api/bussiness/"+selectedEditBussiness?.bussiness_id, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    });
-
-    const jsonData = await response.json();
-    //setBussinesses([...jsonData, ...bussinesses  ]);
-    console.log('success !!')
-    setUploadLoading(false)
-    setSnackBarMessage('Bussiness Updated  Successfully')
-    setSnackBarOpen(true)
-    // window.location = "/";
-  } catch (err) {
-    console.error(err.message);
-    setUploadLoading(false)
-    setSnackBarMessage('Error While Updating Bussiness')
-    setSnackBarOpen(true)
-  }
-
-};
 
 
 console.log(selectedEditBussiness)
