@@ -75,9 +75,9 @@ function UpdateBussiness({ bussinesses, setBussinesses, selectedEditBussiness })
 
     //setSubmittedCoverImagesForShow(selectedEditBussiness.bussiness_cover_image_urls)
     setProfileImageUrl(selectedEditBussiness.bussiness_profile_image_url)
-    setCoverImageUrls(selectedEditBussiness.bussiness_cover_image_urls)
+    setCoverImageUrls(selectedEditBussiness.bussiness_cover_image_urls || [])
     setBussinessApproved(selectedEditBussiness.bussiness_approved)
-    setNumberOfInitialCoverImages(selectedEditBussiness.bussiness_cover_image_urls?.length)
+    setNumberOfInitialCoverImages(selectedEditBussiness.bussiness_cover_image_urls?.length || 0)
   }, [selectedEditBussiness])
 
 
@@ -98,8 +98,8 @@ function UpdateBussiness({ bussinesses, setBussinesses, selectedEditBussiness })
       bussiness_phonenumber,
       bussiness_locationdetails,
       bussiness_tradinghours,
-      bussiness_cover_image_urls:  bussiness_cover_image_urls ,
-      bussiness_profile_image_url: submittedProfileImageForUpload || bussiness_profile_image_url,
+     // bussiness_cover_image_urls:  bussiness_cover_image_urls ,
+     // bussiness_profile_image_url: submittedProfileImageForUpload || bussiness_profile_image_url,
       bussiness_directions_url,
     }
 
@@ -194,10 +194,10 @@ function UpdateBussiness({ bussinesses, setBussinesses, selectedEditBussiness })
 
   //cover photos
   useEffect(() => {
-    if ((numberOfInitialCoverImages + submittedCoverImagesForUpload?.length) == bussiness_cover_image_urls.length) {
+    if ((numberOfInitialCoverImages + submittedCoverImagesForUpload?.length) == bussiness_cover_image_urls?.length) {
       setCoverUploadFinished(true);
     }
-    if ((numberOfInitialCoverImages + submittedCoverImagesForUpload?.length) !== bussiness_cover_image_urls.length) {
+    if ((numberOfInitialCoverImages + submittedCoverImagesForUpload?.length) !== bussiness_cover_image_urls?.length) {
       setCoverUploadFinished(false);
     }
   },[bussiness_cover_image_urls,submittedCoverImagesForUpload])
@@ -252,6 +252,7 @@ console.log('START updating bussinesss !!');
       setUploadLoading(false)
       setSnackBarMessage('Bussiness Updated  Successfully')
       setSnackBarOpen(true)
+     setTimeout(()=>{window.location.reload();}, 100)  
       // window.location = "/";
     } catch (err) {
       console.error(err.message);

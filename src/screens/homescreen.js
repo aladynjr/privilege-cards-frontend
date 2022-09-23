@@ -33,7 +33,7 @@ function HomeScreen() {
   });
 
   var userData = GetUserData(userID);
-console.log(userData)
+
   const logout = async () => {
     await signOut(auth);
 
@@ -90,12 +90,42 @@ console.log(userData)
     
   };
 
+  //purchase a card through stripe 
+  const PurchaseCard = async (app_user_id, app_user_main_privilege_card) => {
+    fetch(process.env.REACT_APP_HOST+"/api/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        items: [
+          { id: 1, quantity: 1},
+        ],
+        app_user_id: app_user_id,       
+        userData: userData,
+      }
+      ),
+    })
+      .then(res => {
+        if (res.ok) return res.json()
+        return res.json().then(json => Promise.reject(json))
+      })
+      .then(({ url }) => {
+        console.log(url)
+        window.location.href = url
+      })
+      .catch(e => {
+        console.error(e.error)
+      })
+    
+  };
+
 
   return (
     <div>
       <h1 style={{opacity:'0.8', marginBottom:'35px'}} >Digital Discount Card</h1>
 
-      <HomepageCard UpdateMainPrivilegeCard={UpdateMainPrivilegeCard} userID={userData?.app_user_id} cardAvailable={userData?.app_user_main_privilege_card} />
+      <HomepageCard UpdateMainPrivilegeCard={UpdateMainPrivilegeCard} PurchaseCard={PurchaseCard} userID={userData?.app_user_id} cardAvailable={userData?.app_user_main_privilege_card} />
   
       {favouriteBussinesses?.length > 0 && <Accordion style={{marginBlock:'20px'}}>
         <AccordionSummary
@@ -135,7 +165,9 @@ console.log(userData)
       />
 
 
-<SearchScreen />
+
+
+
       <Button variant="contained" color="error" onClick={() => { logout() }} >logout</Button>
     </div>
 

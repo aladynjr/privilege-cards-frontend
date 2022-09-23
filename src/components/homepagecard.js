@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import clsx from 'clsx';
 import Skeleton from '@mui/material/Skeleton';
 
-function HomepageCard({ UpdateMainPrivilegeCard, userID, cardAvailable }) {
+function HomepageCard({ UpdateMainPrivilegeCard,PurchaseCard ,userID, cardAvailable }) {
   return (
     <div>
        {!userID && <Skeleton variant="rounded" width={250} height={500} style={{margin:'auto'}} />}
@@ -18,7 +18,7 @@ function HomepageCard({ UpdateMainPrivilegeCard, userID, cardAvailable }) {
       <Divider style={{ background: 'white', width: '70%', margin: 'auto' }} ></Divider>
       {!cardAvailable && <div>
         <h2 style={{ color: 'white', fontWeight: '900' }}>DON'T MISS OUT</h2>
-        <Button variant="contained" style={{ width: '70%', color: 'black', background: 'white', borderRadius: '10px' }} onClick={() => { UpdateMainPrivilegeCard(userID, true); }}  >Buy Now</Button>
+        <Button variant="contained" style={{ width: '70%', color: 'black', background: 'white', borderRadius: '10px' }} onClick={() => { PurchaseCard(userID, true); }}  >Buy Now</Button>
         <div style={{ color: 'white', fontSize: '17px', opacity: '0.8', marginTop: '13px' }}>Each card is valid for 1 Month</div>
       </div>}
 

@@ -120,7 +120,7 @@ const DeleteBussiness = async id => {
 
 
     return (
-        <div>
+        <div style={{marginBottom:'100px'}} >
 
 <Snackbar
         open={copyAlert}
