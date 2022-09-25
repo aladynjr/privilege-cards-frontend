@@ -73,7 +73,7 @@ function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness})
       setValidationError(null);
       setUploadLoading(true); 
 
-       UploadProfilePhoto(); 
+       UploadProfilePhoto(profileImageUpload); 
        UploadCoverPhoto();
     }).catch((err) => {
       console.log('err', err.errors[0])
@@ -154,20 +154,34 @@ function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness})
 
   };
 
-  const UploadProfilePhoto = () => {
-    if (profileImageUpload == null) return;
+  const UploadProfilePhoto = (file) => {
+    if (file == null) return;
 
-
-    const imageRef = ref(storage, `images/bussiness_profile_photo/${profileImageUpload.name + bussiness_name}`);
-    uploadBytes(imageRef, profileImageUpload).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        setProfileImageUrl(url);
-      });
-    });
-
+    let reader = new FileReader();
+    reader.onload = async (event )=> {
+      let blob = new window.Blob( [new Uint8Array(event.target.result)], { type: 'image/png' });
+      let res = await fetch(process.env.REACT_APP_HOST+"/api/upload");
+      let data = await res.json();
+      console.log('%c uploading...', 'color: blue')
+      await fetch(data.url, {
+        method: 'PUT',
+        body: blob
+        });
+        console.log('%c uploaded with url : ' + data.url , 'color: green')
+    
+    } 
+    reader.readAsArrayBuffer(file);
 
 
   };
+
+
+  // const imageRef = ref(storage, `images/bussiness_profile_photo/${profileImageUpload.name + bussiness_name}`);
+  // uploadBytes(imageRef, profileImageUpload).then((snapshot) => {
+  //   getDownloadURL(snapshot.ref).then((url) => {
+  //     setProfileImageUrl(url);
+  //   });
+  // });
 
   console.log(bussiness_profile_image_url)
   const coverPhotosListRef = ref(storage, "images/bussiness_cover_photo");
@@ -245,7 +259,7 @@ console.log(selectedEditBussiness)
     <div>
        <h1>Add Bussiness</h1>
 
-
+<img src={" https://privilegescard.fra1.digitaloceanspaces.com/3f6814cc-0aee-480e-92b6-c59853662267.png?AWSAccessKeyId=DO006R2YGZ2XWZT9927T&Content-Type=image%2Fpng&Expires=1664150529&Signature=cwpk7XWpi0xLgxLE5OD1Z7ftYCM%3D"} alt="profile" />
       <div className="AddBussinessContainer">
         <div className="AddBussinessInputs">
           <TextField error={validationError?.includes('Bussiness Name')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Bussiness Name" InputProps={{ startAdornment: (<InputAdornment position="start"> <RiFlag2Fill /> </InputAdornment>), }} value={bussiness_name} onChange={(e) => setBussinessName(e.target.value)} />
@@ -319,6 +333,7 @@ console.log(selectedEditBussiness)
             </label>
             <br />
           </div>
+          <Button onClick={()=>UploadProfilePhoto(profileImageUpload)} variant='contained' >Upload Profile Photo</Button>
           {(profileImageUpload || bussiness_profile_image_url )&& <div style={{ display: 'flex', backgroundColor: 'whitesmoke', padding: '10px', borderRadius: '10px', margin: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
 
 
