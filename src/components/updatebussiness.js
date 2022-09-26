@@ -98,8 +98,8 @@ function UpdateBussiness({ bussinesses, setBussinesses, selectedEditBussiness })
       bussiness_phonenumber,
       bussiness_locationdetails,
       bussiness_tradinghours,
-     // bussiness_cover_image_urls:  bussiness_cover_image_urls ,
-     // bussiness_profile_image_url: submittedProfileImageForUpload || bussiness_profile_image_url,
+      // bussiness_cover_image_urls:  bussiness_cover_image_urls ,
+      // bussiness_profile_image_url: submittedProfileImageForUpload || bussiness_profile_image_url,
       bussiness_directions_url,
     }
 
@@ -147,13 +147,39 @@ function UpdateBussiness({ bussinesses, setBussinesses, selectedEditBussiness })
   const UploadProfilePhoto = () => {
     if (submittedProfileImageForUpload == null) { setProfileUploadFinished(true); return; }
 
-    const imageRef = ref(storage, `images/bussiness_profile_photo/${submittedProfileImageForUpload.name + bussiness_name}`);
-    uploadBytes(imageRef, submittedProfileImageForUpload).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        setProfileImageUrl(url);
-        setProfileUploadFinished(true);
+    // const imageRef = ref(storage, `images/bussiness_profile_photo/${submittedProfileImageForUpload.name + bussiness_name}`);
+    // uploadBytes(imageRef, submittedProfileImageForUpload).then((snapshot) => {
+    //   getDownloadURL(snapshot.ref).then((url) => {
+    //     setProfileImageUrl(url);
+    //     setProfileUploadFinished(true);
+    //   });
+    // });
+
+
+    console.log('%c start uploading : ', 'color: blue')
+
+    const formData = new FormData();
+    formData.append('file', submittedProfileImageForUpload);
+    fetch(process.env.REACT_APP_HOST + '/api/image/upload',
+      {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('%c uploaded profile photo with name : ' + data.name, 'color: green')
+        if (data.name) {
+          setProfileImageUrl(data.name)
+          setProfileUploadFinished(true);
+          console.log('profile image  :' + data.name)
+
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
       });
-    });
+
+
   };
 
 
@@ -164,12 +190,44 @@ function UpdateBussiness({ bussinesses, setBussinesses, selectedEditBussiness })
 
     setUploadLoading(true)
     submittedCoverImagesForUpload.map((image) => {
-      const imageRef = ref(storage, `images/bussiness_cover_photo/${image.name + bussiness_name}`);
-      uploadBytes(imageRef, image).then((snapshot) => {
-        getDownloadURL(snapshot.ref).then((url) => {
-          setCoverImageUrls(bussiness_cover_image_urls => [...bussiness_cover_image_urls, url]);
+
+
+
+
+
+      const formData = new FormData();
+      formData.append('file', image);
+      fetch(process.env.REACT_APP_HOST + '/api/image/upload',
+        {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('%c uploaded cover photo with name : ' + data.name, 'color: green')
+          setCoverImageUrls(bussiness_cover_image_urls => [...bussiness_cover_image_urls, data.name]);
+          if (image === submittedCoverImagesForUpload[submittedCoverImagesForUpload.length - 1]) {
+
+            console.log('%c finished uploading all cover photos ! START ADDING BUSSINESS', 'color: green')
+            // AddBussiness(bussiness_profile_image_url, bussiness_cover_image_urls);
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+
         });
-      });
+
+
+
+
+
+
+      // const imageRef = ref(storage, `images/bussiness_cover_photo/${image.name + bussiness_name}`);
+      // uploadBytes(imageRef, image).then((snapshot) => {
+      //   getDownloadURL(snapshot.ref).then((url) => {
+      //     setCoverImageUrls(bussiness_cover_image_urls => [...bussiness_cover_image_urls, url]);
+      //   });
+      // });
     })
 
 
@@ -200,7 +258,7 @@ function UpdateBussiness({ bussinesses, setBussinesses, selectedEditBussiness })
     if ((numberOfInitialCoverImages + submittedCoverImagesForUpload?.length) !== bussiness_cover_image_urls?.length) {
       setCoverUploadFinished(false);
     }
-  },[bussiness_cover_image_urls,submittedCoverImagesForUpload])
+  }, [bussiness_cover_image_urls, submittedCoverImagesForUpload])
 
 
   console.log({ profileUploadFinished })
@@ -216,8 +274,8 @@ function UpdateBussiness({ bussinesses, setBussinesses, selectedEditBussiness })
 
 
   const UpdateSameBussiness = async () => {
-    if (!bussiness_cover_image_urls || !bussiness_profile_image_url) {console.log('upading bussinesss canceled !!'); return};
-console.log('START updating bussinesss !!');
+    if (!bussiness_cover_image_urls || !bussiness_profile_image_url) { console.log('upading bussinesss canceled !!'); return };
+    console.log('START updating bussinesss !!');
     try {
       const body = {
         bussiness_name,
@@ -252,7 +310,7 @@ console.log('START updating bussinesss !!');
       setUploadLoading(false)
       setSnackBarMessage('Bussiness Updated  Successfully')
       setSnackBarOpen(true)
-     setTimeout(()=>{window.location.reload();}, 100)  
+      setTimeout(() => { window.location.reload(); }, 100)
       // window.location = "/";
     } catch (err) {
       console.error(err.message);
@@ -270,25 +328,25 @@ console.log('START updating bussinesss !!');
   console.log({ bussiness_cover_image_urls })
 
 
-//delete an uploaded cover photo
-const deleteUploadedCoverPhoto = (image) => {
-  setCoverImageUrls(bussiness_cover_image_urls => bussiness_cover_image_urls.filter((e) => e !== image));
-  //UpdateBussinessField(bussiness_cover_image_urls, 'bussiness_cover_image_urls', selectedEditBussiness?.bussiness_id)
+  //delete an uploaded cover photo
+  const deleteUploadedCoverPhoto = (image) => {
+    setCoverImageUrls(bussiness_cover_image_urls => bussiness_cover_image_urls.filter((e) => e !== image));
+    //UpdateBussinessField(bussiness_cover_image_urls, 'bussiness_cover_image_urls', selectedEditBussiness?.bussiness_id)
 
-}
+  }
 
-console.log({bussiness_cover_image_urls})
+  console.log({ bussiness_cover_image_urls })
 
   //update bussiness 
   const UpdateBussinessField = async (value, column, id) => {
 
     try {
       const body = {
-       value,
-       column
+        value,
+        column
 
       };
-      const response = await fetch(process.env.REACT_APP_HOST + "/api/bussiness/one/" +  id, {
+      const response = await fetch(process.env.REACT_APP_HOST + "/api/bussiness/one/" + id, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
@@ -376,7 +434,7 @@ console.log({bussiness_cover_image_urls})
               {bussiness_cover_image_urls.map((image, index) => {
                 return (
                   <div key={image} className="image">
-                    <img style={{ borderRadius: '20px' }} src={image} height="120" alt="upload" />
+                    <img style={{ borderRadius: '20px' }} src={process.env.REACT_APP_HOST + '/api/image/' + image} height="120" alt="upload" />
                     <button style={{ marginTop: '-7px' }} onClick={() => { deleteUploadedCoverPhoto(image) }}>
                       X
                     </button>
@@ -430,7 +488,7 @@ console.log({bussiness_cover_image_urls})
 
 
             <div className="image">
-              <img style={{ borderRadius: '100%' }} src={bussiness_profile_image_url} height="120" width='120' alt="upload" />
+              <img style={{ borderRadius: '100%' }} src={process.env.REACT_APP_HOST + '/api/image/' + bussiness_profile_image_url} height="120" width='120' alt="upload" />
               {/* <button onClick={() => deleteSubmittedCoverPhoto(image, submittedCoverImagesForShow)}>
                   X
                 </button> */}

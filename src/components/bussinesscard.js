@@ -14,9 +14,9 @@ function BussinessCard({ bussiness, setSelectedBussiness, setBussinessDetailsMod
                 <div className="inner-div">
                     <div className="front">
 
-                        <img className="front__bkg-photo animate__animated animate__fadeIn" style={{ cursor: 'pointer', display: bgLoaded ? 'block' : 'none' }}  src={bussiness?.bussiness_cover_image_url || bussiness?.bussiness_cover_image_urls[bussiness?.bussiness_cover_image_urls?.length - 1]} onLoad={()=>setBgLoaded(true)} />
+                        <img className="front__bkg-photo animate__animated animate__fadeIn" style={{ cursor: 'pointer', display: bgLoaded ? 'block' : 'none' }}  src={process.env.REACT_APP_HOST+ '/api/image/' + bussiness?.bussiness_cover_image_urls[bussiness?.bussiness_cover_image_urls?.length - 1]} onLoad={()=>setBgLoaded(true)} />
                         {(!bgLoaded) && <Skeleton variant="rectangular" width={400} height={250} />}
-                        <img className="front__face-photo animate__animated animate__fadeIn" style={{ cursor: 'pointer', display: profileLoaded ? 'block' : 'none' }} src={bussiness?.bussiness_profile_image_url} onLoad={()=>setProfileLoaded(true)} />
+                        <img className="front__face-photo animate__animated animate__fadeIn" style={{ cursor: 'pointer', display: profileLoaded ? 'block' : 'none' }} src={process.env.REACT_APP_HOST+ '/api/image/' + bussiness?.bussiness_profile_image_url} onLoad={()=>setProfileLoaded(true)} />
                         {!profileLoaded &&  <Skeleton variant="circular" width={90} height={90} className="front__face-photo" />}
                         <div className="front__text">
                             <h3 className="front__text-header">{bussiness?.bussiness_name}</h3>

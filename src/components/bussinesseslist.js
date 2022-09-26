@@ -96,7 +96,6 @@ function BussinessesList({ bussinesses = [{}, {}, {}], setBussinesses, favourite
 
 
     const [cardID, setCardID] =useState(0)
-console.log(cardID)
 
 const [copyAlert, setCopyAlert] = useState(false)
 

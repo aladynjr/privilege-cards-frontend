@@ -24,11 +24,11 @@ import { SiGooglestreetview } from 'react-icons/si'
 import { FaCity } from 'react-icons/fa'
 import LoadingButton from '@mui/lab/LoadingButton';
 import { bussinessSchema } from '../validations/bussinessvalidation';
-import {AiFillEdit} from 'react-icons/ai'
+import { AiFillEdit } from 'react-icons/ai'
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
-function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness}) {
+function AddNewBussiness({ bussinesses, setBussinesses, selectedEditBussiness }) {
 
   const [bussiness_name, setBussinessName] = useState('');
   const [bussiness_city, setBussinessCity] = useState('');
@@ -50,7 +50,7 @@ function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness})
 
   const [validationError, setValidationError] = useState(null);
 
-  const ValidateData= async()=>{
+  const ValidateData = async () => {
     setValidationError(null);
     let data = {
       bussiness_name,
@@ -63,22 +63,22 @@ function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness})
       bussiness_phonenumber,
       bussiness_locationdetails,
       bussiness_tradinghours,
-      bussiness_cover_image_urls : selectedImages,
-      bussiness_profile_image_url : profileImageUpload || bussiness_profile_image_url  ,
+      bussiness_cover_image_urls: selectedImages,
+      bussiness_profile_image_url: profileImageUpload || bussiness_profile_image_url,
       bussiness_directions_url,
     }
 
     bussinessSchema.validate(data).then((valid) => {
       console.log('valid');
       setValidationError(null);
-      setUploadLoading(true); 
+      setUploadLoading(true);
 
-       UploadProfilePhoto(profileImageUpload); 
-       UploadCoverPhoto();
+      UploadProfilePhoto(profileImageUpload);
+      // UploadCoverPhoto();
     }).catch((err) => {
       console.log('err', err.errors[0])
       setValidationError(err.errors[0])
-     
+
     })
     return (!validationError?.length);
   }
@@ -86,7 +86,7 @@ function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness})
 
 
   const AddBussiness = async () => {
-    if (!bussiness_cover_image_urls || !bussiness_profile_image_url) return;
+    if (!bussiness_cover_image_urls || !bussiness_profile_image_url) { console.log('adding bussiness STOPPEPD !', { bussiness_cover_image_urls }, { bussiness_profile_image_url }); setUploadLoading(false); return };
 
     try {
       const body = {
@@ -109,14 +109,14 @@ function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness})
         bussiness_email
 
       };
-      const response = await fetch(process.env.REACT_APP_HOST+"/api/bussiness", {
+      const response = await fetch(process.env.REACT_APP_HOST + "/api/bussiness", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       });
 
       const jsonData = await response.json();
-      setBussinesses([...jsonData, ...bussinesses  ]);
+      setBussinesses([...jsonData, ...bussinesses]);
       console.log('success !!')
       setUploadLoading(false)
       setSnackBarMessage('Bussiness Added Successfully')
@@ -137,7 +137,7 @@ function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness})
   const [bussiness_cover_image_urls, setCoverImageUrl] = useState([]);
   const [bussiness_profile_image_url, setProfileImageUrl] = useState(null);
 
-  const UploadCoverPhoto = () => {
+  const UploadCoverPhoto2 = () => {
     if (coverImageUpload?.length < 1) return;
 
     setUploadLoading(true)
@@ -154,27 +154,69 @@ function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness})
 
   };
 
-  const UploadProfilePhoto = (file) => {
-    if (file == null) return;
+  const UploadCoverPhoto = () => {
 
-    let reader = new FileReader();
-    reader.onload = async (event )=> {
-      let blob = new window.Blob( [new Uint8Array(event.target.result)], { type: 'image/png' });
-      let res = await fetch(process.env.REACT_APP_HOST+"/api/upload");
-      let data = await res.json();
-      console.log('%c uploading...', 'color: blue')
-      await fetch(data.url, {
-        method: 'PUT',
-        body: blob
+    if (coverImageUpload?.length < 1) return;
+
+    setUploadLoading(true)
+
+
+    //loop thourgh coverimageupload with a while do loop and upload each photo and then add the url to the bussiness_cover_image_urls array
+    coverImageUpload.map((image) => {
+
+      const formData = new FormData();
+      formData.append('file', image);
+      fetch(process.env.REACT_APP_HOST + '/api/image/upload',
+        {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('%c uploaded cover photo with name : ' + data.name, 'color: green')
+          setCoverImageUrl(bussiness_cover_image_urls => [...bussiness_cover_image_urls, data.name]);
+          if (image === coverImageUpload[coverImageUpload.length - 1]) {
+
+            console.log('%c finished uploading all cover photos ! START ADDING BUSSINESS', 'color: green')
+           // AddBussiness(bussiness_profile_image_url, bussiness_cover_image_urls);
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+
         });
-        console.log('%c uploaded with url : ' + data.url , 'color: green')
-    
-    } 
-    reader.readAsArrayBuffer(file);
 
+
+    })
 
   };
 
+  function UploadProfilePhoto(file) {
+    if (!file) return;
+    console.log('%c start uploading : ', 'color: blue')
+
+    const formData = new FormData();
+    formData.append('file', file);
+    fetch(process.env.REACT_APP_HOST + '/api/image/upload',
+      {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('%c uploaded profile photo with name : ' + data.name, 'color: green')
+        if (data.name) {
+          setProfileImageUrl(data.name)
+          console.log('profile image  :' + data.name)
+          UploadCoverPhoto();
+
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+
+  }
 
   // const imageRef = ref(storage, `images/bussiness_profile_photo/${profileImageUpload.name + bussiness_name}`);
   // uploadBytes(imageRef, profileImageUpload).then((snapshot) => {
@@ -183,7 +225,6 @@ function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness})
   //   });
   // });
 
-  console.log(bussiness_profile_image_url)
   const coverPhotosListRef = ref(storage, "images/bussiness_cover_photo");
   const profilePhotosListRef = ref(storage, "images/bussiness_profile_photo");
 
@@ -209,7 +250,6 @@ function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness})
     setSelectedImages(selectedImages.filter((e) => e !== image));
     URL.revokeObjectURL(image);
   }
-  console.log(coverImageUpload)
 
 
 
@@ -217,7 +257,7 @@ function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness})
     if ((bussiness_cover_image_urls?.length == selectedImages?.length) && bussiness_profile_image_url) {
         AddBussiness();
 
-      
+
     }
   }, [bussiness_cover_image_urls, bussiness_profile_image_url])
 
@@ -225,41 +265,14 @@ function AddNewBussiness({ bussinesses, setBussinesses , selectedEditBussiness})
   const [snackBarMessage, setSnackBarMessage] = useState(null);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
-//update bussiness
-
-useEffect(()=>{
-if(!selectedEditBussiness) return;
-
-setBussinessName(selectedEditBussiness.bussiness_name)
-setBussinessCity(selectedEditBussiness.bussiness_city)
-setBussinessArea(selectedEditBussiness.bussiness_area)
-setBussinessDiscount(selectedEditBussiness.bussiness_discount)
-setBussinessCuisine(selectedEditBussiness.bussiness_cuisine)
-setBussinessDescription(selectedEditBussiness.bussiness_description)
-setBussinessDiscountDetails(selectedEditBussiness.bussiness_discountdetails)
-setBussinessPhoneNumber(selectedEditBussiness.bussiness_phonenumber)
-setBussinessLocationDetails(selectedEditBussiness.bussiness_locationdetails)
-setBussinessTradingHours(selectedEditBussiness.bussiness_tradinghours)
-setBussinessDirectionsUrl(selectedEditBussiness.bussiness_directions_url)
-setBussinessInstagram(selectedEditBussiness.bussiness_instagram)
-setBussinessWebsite(selectedEditBussiness.bussiness_website)
-setBussinessFacebook(selectedEditBussiness.bussiness_facebook)
-setBussinessEmail(selectedEditBussiness.bussiness_email)
-
-setSelectedImages(selectedEditBussiness.bussiness_cover_image_urls)
-setProfileImageUrl(selectedEditBussiness.bussiness_profile_image_url)
-
-},[selectedEditBussiness])
 
 
 
-
-console.log(selectedEditBussiness)
   return (
     <div>
-       <h1>Add Bussiness</h1>
+      <h1>Add Bussiness</h1>
 
-<img src={" https://privilegescard.fra1.digitaloceanspaces.com/3f6814cc-0aee-480e-92b6-c59853662267.png?AWSAccessKeyId=DO006R2YGZ2XWZT9927T&Content-Type=image%2Fpng&Expires=1664150529&Signature=cwpk7XWpi0xLgxLE5OD1Z7ftYCM%3D"} alt="profile" />
+      <img src={"http://localhost:8080/api/image/80a08843-9f2e-4237-8f36-63ea2eb4f5b3.png"} alt="profile" />
       <div className="AddBussinessContainer">
         <div className="AddBussinessInputs">
           <TextField error={validationError?.includes('Bussiness Name')} required className='addBussinessInputItem' id="outlined-basic" variant="outlined" label="Bussiness Name" InputProps={{ startAdornment: (<InputAdornment position="start"> <RiFlag2Fill /> </InputAdornment>), }} value={bussiness_name} onChange={(e) => setBussinessName(e.target.value)} />
@@ -297,6 +310,7 @@ console.log(selectedEditBussiness)
             </label>
             <br />
           </div>
+          {/* <Button onClick={() => UploadCoverPhoto()} variant='contained' >Upload Cover Photos</Button> */}
 
           {(selectedImages?.length > 0) && <div style={{ display: 'flex', backgroundColor: 'whitesmoke', padding: '10px', borderRadius: '10px', margin: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -333,12 +347,11 @@ console.log(selectedEditBussiness)
             </label>
             <br />
           </div>
-          <Button onClick={()=>UploadProfilePhoto(profileImageUpload)} variant='contained' >Upload Profile Photo</Button>
-          {(profileImageUpload || bussiness_profile_image_url )&& <div style={{ display: 'flex', backgroundColor: 'whitesmoke', padding: '10px', borderRadius: '10px', margin: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          {(profileImageUpload || bussiness_profile_image_url) && <div style={{ display: 'flex', backgroundColor: 'whitesmoke', padding: '10px', borderRadius: '10px', margin: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
 
 
             <div className="image">
-              <img style={{ borderRadius: '100%' }} src={profileImageUpload ? URL.createObjectURL(profileImageUpload) : bussiness_profile_image_url } height="120" width='120' alt="upload" />
+              <img style={{ borderRadius: '100%' }} src={profileImageUpload ? URL.createObjectURL(profileImageUpload) : bussiness_profile_image_url} height="120" width='120' alt="upload" />
               {/* <button onClick={() => deleteHandler(image, selectedImages)}>
                   X
                 </button> */}
@@ -349,21 +362,21 @@ console.log(selectedEditBussiness)
           {/* <Divider style={{ backgorund: 'grey', marginBlock: '20px', width: '70%' }} /> */}
 
           {validationError && <div className="validationErrors">
-                 
-                  <div className="validationError">
-                    {validationError}
-                  </div>
+
+            <div className="validationError">
+              {validationError}
+            </div>
           </div>}
         </div>
-       <LoadingButton
+        <LoadingButton
           size='large'
-          onClick={() => {ValidateData()}}
+          onClick={() => { ValidateData() }}
           endIcon={<SiAddthis />}
           loading={uploadLoading}
           loadingPosition="end"
           variant="contained"
           color="success"
-          style={{ fontSize: '20px', fontFamily: 'Crimson Pro', marginBottom: '100px' , marginInline:'10px'}}
+          style={{ fontSize: '20px', fontFamily: 'Crimson Pro', marginBottom: '100px', marginInline: '10px' }}
         >
           Add Bussiness To Website
         </LoadingButton>

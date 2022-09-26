@@ -28,7 +28,7 @@ import { IoLocationSharp } from 'react-icons/io5'
 function BussinessDetailsModal({ selectedBussiness, setBussinessDetailsModal, cardAvailable, setShowCard, favouriteBussinesses, AddFavouriteBussiness, userID, DeleteFavouriteBussiness, favButtonLoading, setJoinModal,showCard,setCardID }) {
     var coverImages = selectedBussiness?.bussiness_cover_image_urls?.map((image) => {
         return {
-            original: image,
+            original:process.env.REACT_APP_HOST + "/api/image/" + image,
             // thumbnail: image,
         }
 
@@ -83,7 +83,7 @@ const [cardLoading, setCardLoading] = useState(false);
                         {!bgLoaded && <Skeleton variant="rounded" style={{ margin: 'auto', width: '100vw', objectFit: 'cover', height: '50vh', minHeight: '200px' }} />}
                         {/* <img className="front__bkg-photo" style={{width: '100vw', objectFit: 'cover', height: '700px' }} src={selectedBussiness?.bussiness_cover_image_url} /> */}
 
-                        <img className="front__face-photo" style={{ cursor: 'pointer', top: '-34px', width: '100px', height: '100px', display: profileLoaded ? 'block' : 'none' }} src={selectedBussiness?.bussiness_profile_image_url} onLoad={() => setProfileLoaded(true)} />
+                        <img className="front__face-photo" style={{ cursor: 'pointer', top: '-34px', width: '100px', height: '100px', display: profileLoaded ? 'block' : 'none' }} src={process.env.REACT_APP_HOST + "/api/image/" +selectedBussiness?.bussiness_profile_image_url} onLoad={() => setProfileLoaded(true)} />
                         {!profileLoaded && <Skeleton variant="circular" width={90} height={90} className="front__face-photo" />}
 
                         <div className="front__text">
